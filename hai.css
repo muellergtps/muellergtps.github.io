@@ -1,0 +1,69 @@
+.logo ul li a:hover {
+    cursor: pointer;
+    color: #000000;
+  }
+
+  
+  .logo ul li .fa-instagram:hover {
+    color: #E1306C;
+  }
+  
+  .logo ul li .fa-facebook:hover {
+    color: #3B5998;
+  }
+  
+  .logo ul li .fa-twitter:hover {
+    color: #55ACEE;
+  }
+  
+  .logo ul li .fa-tiktok:hover {
+    color: #010101;
+  }
+  
+  .logo ul li .fa-pinterest:hover {
+    color: #BD081C;
+  }
+  
+  .logo ul li .fa-linkedin:hover {
+    color: #0077B5;
+  }
+  
+  .logo ul li .fa-telegram:hover {
+    color: #0088CC;
+  }
+  
+  .logo ul li .fa-reddit:hover {
+    color: #FF4500;
+  }
+  
+  .logo ul li .fa-youtube:hover {
+    color: #FF0000;
+  }
+  
+  .logo ul li .fa-quora:hover {
+    color: #B92B27;
+  }
+  
+  .logo ul li .fa-discord:hover {
+    color: #7289DA;
+  }
+  
+  .logo ul li .fa-twitch:hover {
+    color: #9147FE;
+  }
+  
+  .logo ul li .fa-soundcloud:hover {
+    color: #FF7700;
+  }
+  
+  .logo ul li .fa-github:hover {
+    color: #211F1F;
+  }
+  
+  .logo ul li .fa-medium:hover {
+    color: #12100E;
+  }
+
+  .logo ul li .fa-spotify:hover {
+    color: #1DB954;
+  }
