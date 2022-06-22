@@ -1,0 +1,131 @@
+body {
+    background-color: aliceblue;
+    padding: 0;
+    margin: 0;
+    overflow-x: hidden;
+    text-align: center;
+    scroll-behavior: smooth;
+}
+
+header {
+    background-color: white;
+    padding: 15px;
+    box-shadow:0 0 10px black;
+}
+
+header li {
+    padding-left: 45px;
+    display: inline;
+}
+
+header li a {
+    color: aqua;
+    text-decoration: none;
+    padding: 13px;
+    transition: .3s ease;
+}
+
+header li a:hover {
+    color: yellow;
+}
+
+header ul #contact a {
+    color: aliceblue;
+    background-color: aquamarine;
+    border-radius: 20px;
+    float: right;
+    position: relative;
+    top: -15px;
+}
+
+header ul #contact a:hover {
+    background-color: yellowgreen;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+.mandor {
+    background-image: url('img/jadi.png');
+    background-size: cover;
+    height: 60vh;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    box-shadow:0 0 5px;
+    display: flex;
+}
+
+.right {
+    text-align: center;
+}
+
+.janjigak {
+    text-align: center;
+    text-decoration: none;
+}
+
+.left {
+    float: left;
+    margin: 5%;
+}
+
+.desk {
+    padding-bottom: 25px;
+    display: grid;
+}
+
+.neontext {
+    font-size: 6em;
+    font-weight: 500;
+    color: #fff;
+    letter-spacing: 4px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: 0.5s;
+}
+
+.neontext:hover {
+    color: #fff;
+    text-shadow: 0 0 5px #03e9f4,
+    0 0 25px #03e9f4,
+    0 0 50px #03e9f4,
+    0 0 100px #03e9f4;
+}
+
+.segi {
+    width: 2286px;
+    height: 710px;
+    border: 2px solid #222;
+    
+}
+
+@media (max-width: 500px) {
+    .mandor {
+        position: relative;
+        display: flex;
+        width: 500px;
+    }
+    header ul #contact a {
+        color: aliceblue;
+        background-color: aquamarine;
+        border-radius: 50%;
+        position: relative;
+        top: -1px;
+    }
+    .neontext {
+    font-size: 2em;
+    font-weight: 100;
+    color: #fff;
+    letter-spacing: 4px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: 0.5s;
+    text-shadow: 0 0 5px #03e9f4,
+    0 0 25px #03e9f4,
+    0 0 50px #03e9f4,
+    0 0 100px #03e9f4;
+    }
+}
+
+

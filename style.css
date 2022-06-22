@@ -1,131 +1,88 @@
-body {
-    background-color: aliceblue;
+* {
     padding: 0;
     margin: 0;
-    overflow-x: hidden;
-    text-align: center;
-    scroll-behavior: smooth;
+    background-color: rgb(58 54 54);
+}
+html {
+    font-family: "Rubik", sans-serif;
+}
+body {
+    max-height: 100vh;
+    max-width: 100%;
+    background-color: rgb(58 54 54);
 }
 
-header {
-    background-color: white;
-    padding: 15px;
-    box-shadow:0 0 10px black;
+.atur {
+    padding-bottom: 85px;
 }
 
-header li {
-    padding-left: 45px;
-    display: inline;
-}
-
-header li a {
-    color: aqua;
-    text-decoration: none;
-    padding: 13px;
-    transition: .3s ease;
-}
-
-header li a:hover {
-    color: yellow;
-}
-
-header ul #contact a {
-    color: aliceblue;
-    background-color: aquamarine;
-    border-radius: 20px;
-    float: right;
-    position: relative;
-    top: -15px;
-}
-
-header ul #contact a:hover {
-    background-color: yellowgreen;
-    transform: scale(1.1);
-    cursor: pointer;
-}
-
-.mandor {
-    background-image: url('img/jadi.png');
-    background-size: cover;
-    height: 60vh;
-    position: relative;
-    justify-content: center;
-    align-items: center;
-    border-radius: 20px;
-    box-shadow:0 0 5px;
+.kepalabapakkao {
+    margin: 50px 0 50px;
     display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.right {
-    text-align: center;
+.foto img {
+    height: 79px;
+    width: 79px;
+    border-radius: 25px;
+    border: 1px solid rgb(35, 33, 33);
 }
 
-.janjigak {
-    text-align: center;
-    text-decoration: none;
+.neon {
+    text-shadow: 0 0 15px rgb(37, 216, 216),
+    0 0 25px rgb(37, 216, 216),
+    0 0 50px rgb(37, 216, 216),
+    0 0 100px rgb(37, 216, 216);
+    color: white;
 }
 
-.left {
+.button {
+    padding: 8px;
+    margin: 20px auto;
+    float: right;
+}
+
+.lefts {
+    padding: 16px;
+    margin: 20px auto;
     float: left;
-    margin: 5%;
 }
 
-.desk {
-    padding-bottom: 25px;
-    display: grid;
+.button:hover {
+    transition: .5s ease;
 }
 
-.neontext {
-    font-size: 6em;
-    font-weight: 500;
-    color: #fff;
-    letter-spacing: 4px;
-    cursor: pointer;
-    text-transform: uppercase;
-    transition: 0.5s;
+.lefts:hover {
+    transition: .5s ease;
 }
 
-.neontext:hover {
-    color: #fff;
-    text-shadow: 0 0 5px #03e9f4,
-    0 0 25px #03e9f4,
-    0 0 50px #03e9f4,
-    0 0 100px #03e9f4;
+.akhir {
+    text-align: center;
+    margin-bottom: 15px;
+    background-color: rgb(78, 76, 76);
+    height: 70px;
 }
 
-.segi {
-    width: 2286px;
-    height: 710px;
-    border: 2px solid #222;
-    
+.akhir a {
+    color: #262626;
+    text-decoration: none;
+    font-weight: bold;
+    text-shadow: 0 0 15px rgb(37, 216, 216),
+    0 0 25px rgb(37, 216, 216),
+    0 0 50px rgb(37, 216, 216),
+    0 0 100px rgb(37, 216, 216);
+    color: white;
 }
 
-@media (max-width: 500px) {
-    .mandor {
-        position: relative;
-        display: flex;
-        width: 500px;
-    }
-    header ul #contact a {
-        color: aliceblue;
-        background-color: aquamarine;
-        border-radius: 50%;
-        position: relative;
-        top: -1px;
-    }
-    .neontext {
-    font-size: 2em;
-    font-weight: 100;
-    color: #fff;
-    letter-spacing: 4px;
-    cursor: pointer;
-    text-transform: uppercase;
-    transition: 0.5s;
-    text-shadow: 0 0 5px #03e9f4,
-    0 0 25px #03e9f4,
-    0 0 50px #03e9f4,
-    0 0 100px #03e9f4;
-    }
+.neon ul li .fab {
+    font-size: 20px;
+    line-height: -50px;
+    transition: 0.6s;
+    list-style: none;
 }
 
-
+.neon ul li .fab:hover {
+    transform: translateY(-10px);
+}
