@@ -36,6 +36,7 @@ body {
     0 0 50px rgb(37, 216, 216),
     0 0 100px rgb(37, 216, 216);
     color: white;
+    
 }
 
 .button {
@@ -86,3 +87,4 @@ body {
 .neon ul li .fab:hover {
     transform: translateY(-10px);
 }
+
