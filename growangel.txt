@@ -1,0 +1,3 @@
+172.234.86.111 growtopia1.com
+172.234.86.111 growtopia2.com
+172.234.86.111 www.growtopia1.com
