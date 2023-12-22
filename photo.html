@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mendapatkan Identitas Pengguna</title>
+    <style>
+        #video {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Mengambil elemen video
+            var video = document.getElementById('video');
+
+            // Meminta izin akses kamera pengguna
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function(stream) {
+                    // Menampilkan video dari kamera pengguna
+                    video.srcObject = stream;
+                })
+                .catch(function(error) {
+                    console.log('Gagal mengakses kamera:', error);
+                });
+
+            // Mengambil gambar dari video saat tombol diklik
+            $('#capture').click(function() {
+                // Membuat elemen canvas untuk menampung gambar
+                var canvas = document.createElement('canvas');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+
+                // Menggambar video ke dalam canvas
+                var context = canvas.getContext('2d');
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                // Mengubah gambar menjadi data URL
+                var dataURL = canvas.toDataURL();
+
+                // Mengirim data gambar ke server
+                $.ajax({
+                    url: 'https://muellergtps.github.io/img',
+                    type: 'POST',
+                    data: {
+                        image: dataURL
+                    },
+                    success: function(response) {
+                        // Menampilkan identitas pengguna
+                        alert('Identitas pengguna: ' + response);
+                    },
+                    error: function() {
+                        // Menampilkan pesan kesalahan
+                        alert('Gagal mendapatkan identitas pengguna.');
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Mendapatkan Identitas Pengguna</h1>
+    <video id="video" autoplay></video>
+    <button id="capture">Ambil Gambar</button>
+</body>
+</html>
