@@ -5,8 +5,8 @@ let option = {
         "@MuellerGTPS"
     ],
     discord: "/growangel.txt",
-    whatsapp: "https://chat.whatsapp.com/J5mtHM9cNfg4GGREP7RvoR",
-    ip_address: "192.53.118.126",
+    whatsapp: "https://chat.whatsapp.com/Du0oRxEtnS82bxR5FPBi32",
+    ip_address: "172.232.236.81",
     host_for_android: "growangel.txt"
 }
 
