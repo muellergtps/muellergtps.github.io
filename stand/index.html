@@ -1,0 +1,886 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gapura Papua STMKG — Pusat Akses Visualisasi &amp; Dokumen</title>
+<style>
+:root {
+  --bg: #f2f2ef;
+  --card: #fbfbfa;
+  --surface: #ffffff;
+  --border: #d8d8d4;
+  --border-strong: #b4b4b0;
+  --ink: #18181a;
+  --text: #3f3f44;
+  --muted: #71717a;
+  --accent: #b06a3b;
+  --accent-soft: #f7efe6;
+  --blue: #2563eb;
+  --green: #15803d;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.04);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font: 14px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: var(--blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: var(--mono); font-size: .88em; background: #ecece8; padding: 1px 5px; border-radius: 3px; color: var(--ink); }
+pre { background: #18181a; color: #f4f4f1; padding: 14px 16px; border-radius: 4px; overflow-x: auto; font: 12.5px/1.55 var(--mono); }
+pre code { background: none; padding: 0; color: inherit; }
+
+.topbar {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+}
+.topbar-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 14px 20px 0;
+}
+.head-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+  padding-bottom: 12px;
+}
+.brand-kicker {
+  font: 11px/1 var(--mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 5px;
+}
+h1.site-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -.01em;
+}
+.spec-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.pill {
+  font: 11.5px/1.2 var(--mono);
+  padding: 5px 9px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+.pill strong { color: var(--ink); }
+.pill.ok { border-color: #bbf7d0; background: #f0fdf4; color: var(--green); }
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+}
+.tab-btn {
+  appearance: none;
+  border: 1px solid transparent;
+  border-bottom: none;
+  background: transparent;
+  color: var(--muted);
+  font: 600 13px/1 var(--sans);
+  padding: 10px 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  border-radius: 4px 4px 0 0;
+  transition: color .15s, background .15s;
+}
+.tab-btn:hover { color: var(--ink); background: rgba(0,0,0,.03); }
+.tab-btn[aria-selected="true"] {
+  background: var(--bg);
+  color: var(--ink);
+  border-color: var(--border);
+  box-shadow: inset 0 2px 0 var(--accent);
+}
+
+.main {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 22px 20px 64px;
+}
+.panel { display: none; }
+.panel.active { display: block; }
+
+.section-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.section-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.btn-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  font: 600 12px/1 var(--mono);
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--border-strong);
+  cursor: pointer;
+  text-decoration: none;
+}
+.btn:hover { background: #f4f4f0; text-decoration: none; }
+.btn.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+.frame-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  padding: 10px;
+}
+.sim-frame {
+  width: 100%;
+  height: 740px;
+  border: 0;
+  display: block;
+  background: #f2f2ef;
+}
+@media (max-width: 720px) {
+  .sim-frame { height: 660px; }
+}
+
+.hint-strip {
+  margin-top: 12px;
+  padding: 11px 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  font: 12.5px/1.5 var(--mono);
+  color: var(--text);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
+  gap: 18px;
+}
+@media (max-width: 560px) {
+  .grid-2 { grid-template-columns: 1fr; }
+}
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+}
+.card-head {
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid #ecece8;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+.card-title { margin: 0; font-size: 14.5px; font-weight: 700; color: var(--ink); }
+.card-desc { margin: 4px 0 0; font-size: 12.5px; color: var(--muted); }
+.badge {
+  flex: none;
+  font: 11px/1 var(--mono);
+  padding: 4px 7px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  border: 1px solid #e6cdb7;
+}
+.card-media {
+  background: #fff;
+  padding: 10px;
+  cursor: zoom-in;
+  border-bottom: 1px solid #ecece8;
+}
+.card-media img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 460px;
+  object-fit: contain;
+}
+.card-foot {
+  padding: 10px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--card);
+}
+.link-group { display: flex; flex-wrap: wrap; gap: 12px; font: 12px/1 var(--mono); }
+
+.doc-box {
+  margin-top: 22px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  padding: 24px 28px;
+}
+@media (max-width: 640px) {
+  .doc-box { padding: 16px; }
+}
+.doc-box h1 { font-size: 20px; margin: 0 0 8px; color: var(--ink); }
+.doc-box h2 { font-size: 16px; margin: 24px 0 10px; padding-top: 14px; border-top: 1px solid #ecece8; color: var(--ink); }
+.doc-box h3 { font-size: 14px; margin: 18px 0 8px; color: var(--ink); }
+.doc-box hr { border: 0; border-top: 1px solid #ecece8; margin: 18px 0; }
+.doc-box ul, .doc-box ol { padding-left: 22px; }
+.doc-box li { margin: 4px 0; }
+.doc-box li.chk-item { list-style: none; margin-left: -18px; }
+.doc-box li.chk-item label { cursor: pointer; display: inline-flex; align-items: flex-start; gap: 8px; }
+.doc-box li.chk-item input { margin-top: 4px; }
+
+.table-wrap { overflow-x: auto; margin: 12px 0; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { border: 1px solid #e4e4e0; padding: 7px 10px; }
+th { background: #f6f6f3; color: var(--ink); font-weight: 600; }
+tr:nth-child(even) td { background: #fcfcfa; }
+
+.search-input {
+  padding: 7px 11px;
+  font: 12.5px/1.2 var(--mono);
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--ink);
+  min-width: 240px;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 18, 20, .86);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 100;
+}
+.modal.open { display: flex; }
+.modal-inner {
+  background: #fff;
+  max-width: 96vw;
+  max-height: 94vh;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+}
+.modal-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  font: 12.5px/1 var(--mono);
+  color: var(--ink);
+}
+.modal-body {
+  overflow: auto;
+  padding: 12px;
+  background: #fff;
+}
+.modal-body img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="head-row">
+      <div>
+        <div class="brand-kicker">Gapura Papua STMKG · Revisi 3 · Freestanding di Depan Tenda 3×3 m</div>
+        <h1 class="site-title">Pusat Akses Visualisasi &amp; Dokumen Teknik STAND</h1>
+      </div>
+      <div class="spec-pills">
+        <span class="pill"><strong>4.400 × 3.400</strong> mm</span>
+        <span class="pill">Bukaan <strong>2.000 / 2.200</strong> mm</span>
+        <span class="pill">Pemberat <strong>2×300 kg</strong></span>
+        <span class="pill ok">FOS min <strong>1.60</strong> @ 20 m/s</span>
+      </div>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Navigasi dokumen Gapura Papua STMKG">
+      <button class="tab-btn" role="tab" aria-selected="true" data-tab="interaktif">1. Simulasi Interaktif</button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="geometri">2. Geometri &amp; Koordinat</button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="struktur">3. Struktur &amp; Sambungan</button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="rakit">4. Urutan Rakit &amp; Cutting List</button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-tab="berkas">5. Semua Berkas</button>
+    </nav>
+  </div>
+</header>
+
+<main class="main">
+  <!-- TAB 1: INTERAKTIF -->
+  <section id="tab-interaktif" class="panel active">
+    <div class="section-bar">
+      <h2 class="section-title">Simulasi Stabilitas &amp; Rakitan Interaktif (Anatomy Kit)</h2>
+      <div class="btn-row">
+        <button class="btn active" id="btn-theme-light" type="button">Tema Terang</button>
+        <button class="btn" id="btn-theme-dark" type="button">Tema Gelap</button>
+        <a class="btn" id="btn-open-sim" href="docs/05-interaktif/stand-light.html" target="_blank" rel="noopener">Buka Penuh ↗</a>
+      </div>
+    </div>
+    <div class="frame-card">
+      <iframe id="sim-iframe" class="sim-frame" src="docs/05-interaktif/stand-light.html" title="Simulasi interaktif Gapura Papua STMKG"></iframe>
+    </div>
+    <div class="hint-strip">
+      <span><strong>Pointer / ← →</strong> : ubah kecepatan angin (0–25 m/s)</span>
+      <span><strong>Klik / B</strong> : ganti pemberat (0 / 300 / 600 / 700 kg)</span>
+      <span><strong>Spasi / E</strong> : buka/tutup mode rakit (exploded view)</span>
+    </div>
+  </section>
+
+  <!-- TAB 2: GEOMETRI -->
+  <section id="tab-geometri" class="panel">
+    <div class="section-bar">
+      <h2 class="section-title">Gambar Geometri &amp; Tampak (Tahap 2 + Revisi 3)</h2>
+      <div class="btn-row">
+        <a class="btn" href="docs/02-geometri/top-iso.html" target="_blank" rel="noopener">Buka Lembar Gabungan ↗</a>
+        <a class="btn" href="docs/02-geometri/coordinates.csv" target="_blank" rel="noopener">Unduh coordinates.csv</a>
+      </div>
+    </div>
+    <div class="grid-2">
+      
+      <article class="card">
+        <div class="card-head">
+          <div>
+            <h3 class="card-title">C + D · Rencana &amp; Perspektif Isometrik (Revisi 3)</h3>
+            <p class="card-desc">Gabungan Tampak Atas dan Perspektif Isometrik lengkap dengan box pemberat 2×300 kg dan banner x = ±1.500…±2.100.</p>
+          </div>
+          <span class="badge">Revisi 3</span>
+        </div>
+        <div class="card-media" data-zoom="docs/02-geometri/top-iso-rev3-final.png" data-title="C + D · Rencana &amp; Perspektif Isometrik (Revisi 3)" data-link="docs/02-geometri/top-iso.html">
+          <img src="docs/02-geometri/top-iso-rev3-final.png" alt="C + D · Rencana &amp; Perspektif Isometrik (Revisi 3)" loading="lazy">
+        </div>
+        <div class="card-foot">
+          <div class="link-group">
+            <a href="docs/02-geometri/top-iso.html" target="_blank" rel="noopener">Buka HTML ↗</a>
+            
+            <a href="docs/02-geometri/top-iso-rev3-final.png" target="_blank" rel="noopener">PNG ↗</a>
+          </div>
+          <button class="btn" type="button" data-zoom="docs/02-geometri/top-iso-rev3-final.png" data-title="C + D · Rencana &amp; Perspektif Isometrik (Revisi 3)" data-link="docs/02-geometri/top-iso.html">Perbesar</button>
+        </div>
+      </article>
+      <article class="card">
+        <div class="card-head">
+          <div>
+            <h3 class="card-title">D · Perspektif Isometrik (Azimut 60°)</h3>
+            <p class="card-desc">Pandangan isometrik 3D skematik untuk posisi balok, pilar, lengkung, burung, banner, runner, dan celah 0,15 m ke tenda.</p>
+          </div>
+          <span class="badge">Revisi 3</span>
+        </div>
+        <div class="card-media" data-zoom="docs/02-geometri/iso.png" data-title="D · Perspektif Isometrik (Azimut 60°)" data-link="docs/02-geometri/iso.html">
+          <img src="docs/02-geometri/iso.png" alt="D · Perspektif Isometrik (Azimut 60°)" loading="lazy">
+        </div>
+        <div class="card-foot">
+          <div class="link-group">
+            <a href="docs/02-geometri/iso.html" target="_blank" rel="noopener">Buka HTML ↗</a>
+            <a href="docs/02-geometri/iso.svg" target="_blank" rel="noopener">SVG ↗</a>
+            <a href="docs/02-geometri/iso.png" target="_blank" rel="noopener">PNG ↗</a>
+          </div>
+          <button class="btn" type="button" data-zoom="docs/02-geometri/iso.png" data-title="D · Perspektif Isometrik (Azimut 60°)" data-link="docs/02-geometri/iso.html">Perbesar</button>
+        </div>
+      </article>
+      <article class="card">
+        <div class="card-head">
+          <div>
+            <h3 class="card-title">A + B · Tampak Depan &amp; Tampak Samping</h3>
+            <p class="card-desc">Elevasi depan (bentang 3,6 m, tinggi 3,4 m, bukaan 2,0 m) dan potongan samping Y-Z di depan tenda 3×3 m.</p>
+          </div>
+          <span class="badge">Tahap 2</span>
+        </div>
+        <div class="card-media" data-zoom="docs/02-geometri/front-side.png" data-title="A + B · Tampak Depan &amp; Tampak Samping" data-link="docs/02-geometri/front-side.html">
+          <img src="docs/02-geometri/front-side.png" alt="A + B · Tampak Depan &amp; Tampak Samping" loading="lazy">
+        </div>
+        <div class="card-foot">
+          <div class="link-group">
+            <a href="docs/02-geometri/front-side.html" target="_blank" rel="noopener">Buka HTML ↗</a>
+            <a href="docs/02-geometri/front.svg" target="_blank" rel="noopener">SVG ↗</a>
+            <a href="docs/02-geometri/front-side.png" target="_blank" rel="noopener">PNG ↗</a>
+          </div>
+          <button class="btn" type="button" data-zoom="docs/02-geometri/front-side.png" data-title="A + B · Tampak Depan &amp; Tampak Samping" data-link="docs/02-geometri/front-side.html">Perbesar</button>
+        </div>
+      </article>
+      <article class="card">
+        <div class="card-head">
+          <div>
+            <h3 class="card-title">C · Tampak Atas (Rencana X-Y)</h3>
+            <p class="card-desc">Tata letak denah gapura, zona bebas tetangga ≥ 0,70 m, runner, box pemberat, dan jarak aman 0,15 m ke tenda.</p>
+          </div>
+          <span class="badge">Revisi 3</span>
+        </div>
+        <div class="card-media" data-zoom="docs/02-geometri/top.png" data-title="C · Tampak Atas (Rencana X-Y)" data-link="docs/02-geometri/top.html">
+          <img src="docs/02-geometri/top.png" alt="C · Tampak Atas (Rencana X-Y)" loading="lazy">
+        </div>
+        <div class="card-foot">
+          <div class="link-group">
+            <a href="docs/02-geometri/top.html" target="_blank" rel="noopener">Buka HTML ↗</a>
+            <a href="docs/02-geometri/top.svg" target="_blank" rel="noopener">SVG ↗</a>
+            <a href="docs/02-geometri/top.png" target="_blank" rel="noopener">PNG ↗</a>
+          </div>
+          <button class="btn" type="button" data-zoom="docs/02-geometri/top.png" data-title="C · Tampak Atas (Rencana X-Y)" data-link="docs/02-geometri/top.html">Perbesar</button>
+        </div>
+      </article>
+    </div>
+
+    <div class="doc-box">
+      <div class="section-bar">
+        <h2 style="margin:0;padding:0;border:0">Tabel Koordinat 3D (<code>docs/02-geometri/coordinates.csv</code>)</h2>
+        <input id="coord-filter" class="search-input" type="search" placeholder="Filter elemen / deskripsi / label...">
+      </div>
+      <div class="table-wrap">
+        <table id="coord-table">
+          <thead><tr><th>id</th><th>element</th><th>description</th><th>x_m</th><th>y_m</th><th>z_m</th><th>label</th></tr></thead>
+          <tbody>
+            <tr><td style="font-family:var(--mono);font-weight:600">PL1</td><td>pilar_kiri</td><td>base_outer_front_bottom</td><td style="text-align:right;font-family:var(--mono)">-1.500</td><td style="text-align:right;font-family:var(--mono)">0.650</td><td style="text-align:right;font-family:var(--mono)">0.000</td><td>KONFIRMASI/K1</td></tr><tr><td style="font-family:var(--mono);font-weight:600">PL2</td><td>pilar_kiri</td><td>base_inner_front_bottom</td><td style="text-align:right;font-family:var(--mono)">-1.000</td><td style="text-align:right;font-family:var(--mono)">0.650</td><td style="text-align:right;font-family:var(--mono)">0.000</td><td>KONFIRMASI/K1</td></tr><tr><td style="font-family:var(--mono);font-weight:600">PL3</td><td>pilar_kiri</td><td>base_inner_back_bottom</td><td style="text-align:right;font-family:var(--mono)">-1.000</td><td style="text-align:right;font-family:var(--mono)">0.150</td><td style="text-align:right;font-family:var(--mono)">0.000</td><td>KONFIRMASI/K1</td></tr><tr><td style="font-family:var(--mono);font-weight:600">PL4</td><td>pilar_kiri</td><td>base_outer_back_bottom</td><td style="text-align:right;font-family:var(--mono)">-1.500</td><td style="text-align:right;font-family:var(--mono)">0.150</td><td style="text-align:right;font-family:var(--mono)">0.000</td><td>KONFIRMASI/K1</td></tr><tr><td style="font-family:var(--mono);font-weight:600">PL5</td><td>pilar_kiri</td><td>top_outer_front</td><td style="text-align:right;font-family:var(--mono)">-1.500</td><td style="text-align:right;font-family:var(--mono)">0.650</td><td style="text-align:right;font-family:var(--mono)">2.000</td><td>KEPUTUSAN/K2</td></tr><tr><td style="font-family:var(--mono);font-weight:600">PL6</td><td>pilar_kiri</td><td>top_inner_front</td><td style="text-align:right;font-family:var(--mono)">-1.100</td><td style="text-align:right;font-family:var(--mono)">0.650</td><td style="text-align:right;font-family:var(--mono)">2.000</td><td>KEPUTUSAN/K2/D-C</td></tr><tr><td style="font-family:var(--mono);font-weight:600">PL7</td><td>pilar_kiri</td><td>top_inner_back</td><td style="text-align:right;font-family:var(--mono)">-1.100</td><td style="text-align:right;font-family:var(--mono)">0.250</td><td style="text-align:right;font-family:var(--mono)">2.000</td><td>KEPUTUSAN/K2/D-C</td></tr><tr><td style="font-family:var(--mono);font-weight:600">PL8</td><td>pilar_kiri</td><td>top_outer_back</td><td style="text-align:right;font-family:var(--mono)">-1.500</td><td style="text-align:right;font-family:var(--mono)">0.250</td><td style="text-align:right;font-family:var(--mono)">2.000</td><td>KEPUTUSAN/K2/D-C</td></tr><tr><td style="font-family:var(--mono);font-weight:600">PR1</td><td>pilar_kanan</td><td>base_outer_front_bottom</td><td style="text-align:right;font-family:var(--mono)">1.500</td><td style="text-align:right;font-family:var(--mono)">0.650</td><td style="text-align:right;font-family:var(--mono)">0.000</td><td>KONFIRMASI/K1</td></tr><tr><td style="font-family:var(--mono);font-weight:600">PR2</td><td>pilar_kanan</td><td>base_inner_front_bottom</td><td style="text-align:right;font-family:var(--mono)">1.000</td><td style="text-align:right;font-family:var(--mono)">0.650</td><td style="text-align:right;font-family:var(--mono)">0.000</td><td>KONFIRMASI/K1</td></tr><tr><td style="font-family:var(--mono);font-weight:600">PR3</td><td>pilar_kanan</td><td>base_inner_back_bottom</td><td style="text-align:right;font-family:var(--mono)">1.000</td><td style="text-align:right;font-family:var(--mono)">0.150</td><td style="text-align:right;font-family:var(--mono)">0.000</td><td>KONFIRMASI/K1</td></tr><tr><td style="font-family:var(--mono);font-weight:600">PR4</td><td>pilar_kanan</td><td>base_outer_back_bottom</td><td style="text-align:right;font-family:var(--mono)">1.500</td><td style="text-align:right;font-family:var(--mono)">0.150</td><td style="text-align:right;font-family:var(--mono)">0.000</td><td>KONFIRMASI/K1</td></tr><tr><td style="font-family:var(--mono);font-weight:600">PR5</td><td>pilar_kanan</td><td>top_outer_front</td><td style="text-align:right;font-family:var(--mono)">1.500</td><td style="text-align:right;font-family:var(--mono)">0.650</td><td style="text-align:right;font-family:var(--mono)">2.000</td><td>KEPUTUSAN/K2</td></tr><tr><td style="font-family:var(--mono);font-weight:600">PR6</td><td>pilar_kanan</td><td>top_inner_front</td><td style="text-align:right;font-family:var(--mono)">1.100</td><td style="text-align:right;font-family:var(--mono)">0.650</td><td style="text-align:right;font-family:var(--mono)">2.000</td><td>KEPUTUSAN/K2/D-C</td></tr><tr><td style="font-family:var(--mono);font-weight:600">PR7</td><td>pilar_kanan</td><td>top_inner_back</td><td style="text-align:right;font-family:var(--mono)">1.100</td><td style="text-align:right;font-family:var(--mono)">0.250</td><td style="text-align:right;font-family:var(--mono)">2.000</td><td>KEPUTUSAN/K2/D-C</td></tr><tr><td style="font-family:var(--mono);font-weight:600">PR8</td><td>pilar_kanan</td><td>top_outer_back</td><td style="text-align:right;font-family:var(--mono)">1.500</td><td style="text-align:right;font-family:var(--mono)">0.250</td><td style="text-align:right;font-family:var(--mono)">2.000</td><td>KEPUTUSAN/K2/D-C</td></tr><tr><td style="font-family:var(--mono);font-weight:600">B1</td><td>balok</td><td>bottom_front_left</td><td style="text-align:right;font-family:var(--mono)">-1.800</td><td style="text-align:right;font-family:var(--mono)">0.650</td><td style="text-align:right;font-family:var(--mono)">2.000</td><td>KONFIRMASI/D1/D2</td></tr><tr><td style="font-family:var(--mono);font-weight:600">B2</td><td>balok</td><td>bottom_front_right</td><td style="text-align:right;font-family:var(--mono)">1.800</td><td style="text-align:right;font-family:var(--mono)">0.650</td><td style="text-align:right;font-family:var(--mono)">2.000</td><td>KONFIRMASI/D1/D2</td></tr><tr><td style="font-family:var(--mono);font-weight:600">B3</td><td>balok</td><td>bottom_back_left</td><td style="text-align:right;font-family:var(--mono)">-1.800</td><td style="text-align:right;font-family:var(--mono)">0.150</td><td style="text-align:right;font-family:var(--mono)">2.000</td><td>KONFIRMASI/D1/D2</td></tr><tr><td style="font-family:var(--mono);font-weight:600">B4</td><td>balok</td><td>bottom_back_right</td><td style="text-align:right;font-family:var(--mono)">1.800</td><td style="text-align:right;font-family:var(--mono)">0.150</td><td style="text-align:right;font-family:var(--mono)">2.000</td><td>KONFIRMASI/D1/D2</td></tr><tr><td style="font-family:var(--mono);font-weight:600">B5</td><td>balok</td><td>top_front_left</td><td style="text-align:right;font-family:var(--mono)">-1.800</td><td style="text-align:right;font-family:var(--mono)">0.650</td><td style="text-align:right;font-family:var(--mono)">2.500</td><td>KEPUTUSAN/K3</td></tr><tr><td style="font-family:var(--mono);font-weight:600">B6</td><td>balok</td><td>top_front_right</td><td style="text-align:right;font-family:var(--mono)">1.800</td><td style="text-align:right;font-family:var(--mono)">0.650</td><td style="text-align:right;font-family:var(--mono)">2.500</td><td>KEPUTUSAN/K3</td></tr><tr><td style="font-family:var(--mono);font-weight:600">B7</td><td>balok</td><td>top_back_left</td><td style="text-align:right;font-family:var(--mono)">-1.800</td><td style="text-align:right;font-family:var(--mono)">0.150</td><td style="text-align:right;font-family:var(--mono)">2.500</td><td>KEPUTUSAN/K3</td></tr><tr><td style="font-family:var(--mono);font-weight:600">B8</td><td>balok</td><td>top_back_right</td><td style="text-align:right;font-family:var(--mono)">1.800</td><td style="text-align:right;font-family:var(--mono)">0.150</td><td style="text-align:right;font-family:var(--mono)">2.500</td><td>KEPUTUSAN/K3</td></tr><tr><td style="font-family:var(--mono);font-weight:600">PN1</td><td>panel_nama</td><td>bottom_left</td><td style="text-align:right;font-family:var(--mono)">-1.000</td><td style="text-align:right;font-family:var(--mono)">0.650</td><td style="text-align:right;font-family:var(--mono)">2.025</td><td>KEPUTUSAN</td></tr><tr><td style="font-family:var(--mono);font-weight:600">PN2</td><td>panel_nama</td><td>bottom_right</td><td style="text-align:right;font-family:var(--mono)">1.000</td><td style="text-align:right;font-family:var(--mono)">0.650</td><td style="text-align:right;font-family:var(--mono)">2.025</td><td>KEPUTUSAN</td></tr><tr><td style="font-family:var(--mono);font-weight:600">PN3</td><td>panel_nama</td><td>top_right</td><td style="text-align:right;font-family:var(--mono)">1.000</td><td style="text-align:right;font-family:var(--mono)">0.650</td><td style="text-align:right;font-family:var(--mono)">2.475</td><td>KEPUTUSAN</td></tr><tr><td style="font-family:var(--mono);font-weight:600">PN4</td><td>panel_nama</td><td>top_left</td><td style="text-align:right;font-family:var(--mono)">-1.000</td><td style="text-align:right;font-family:var(--mono)">0.650</td><td style="text-align:right;font-family:var(--mono)">2.475</td><td>KEPUTUSAN</td></tr><tr><td style="font-family:var(--mono);font-weight:600">A0</td><td>lengkung</td><td>center_top</td><td style="text-align:right;font-family:var(--mono)">0.000</td><td style="text-align:right;font-family:var(--mono)">0.400</td><td style="text-align:right;font-family:var(--mono)">2.500</td><td>TAFSIR/D4</td></tr><tr><td style="font-family:var(--mono);font-weight:600">AL</td><td>lengkung</td><td>left_end_top</td><td style="text-align:right;font-family:var(--mono)">-1.800</td><td style="text-align:right;font-family:var(--mono)">0.400</td><td style="text-align:right;font-family:var(--mono)">3.000</td><td>TAFSIR/D4</td></tr><tr><td style="font-family:var(--mono);font-weight:600">AR</td><td>lengkung</td><td>right_end_top</td><td style="text-align:right;font-family:var(--mono)">1.800</td><td style="text-align:right;font-family:var(--mono)">0.400</td><td style="text-align:right;font-family:var(--mono)">3.000</td><td>TAFSIR/D4</td></tr><tr><td style="font-family:var(--mono);font-weight:600">A0B</td><td>lengkung</td><td>center_bottom</td><td style="text-align:right;font-family:var(--mono)">0.000</td><td style="text-align:right;font-family:var(--mono)">0.400</td><td style="text-align:right;font-family:var(--mono)">2.250</td><td>KEPUTUSAN</td></tr><tr><td style="font-family:var(--mono);font-weight:600">ALB</td><td>lengkung</td><td>left_end_bottom</td><td style="text-align:right;font-family:var(--mono)">-1.800</td><td style="text-align:right;font-family:var(--mono)">0.400</td><td style="text-align:right;font-family:var(--mono)">2.750</td><td>KEPUTUSAN</td></tr><tr><td style="font-family:var(--mono);font-weight:600">ARB</td><td>lengkung</td><td>right_end_bottom</td><td style="text-align:right;font-family:var(--mono)">1.800</td><td style="text-align:right;font-family:var(--mono)">0.400</td><td style="text-align:right;font-family:var(--mono)">2.750</td><td>KEPUTUSAN</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BLMIN</td><td>burung_kiri</td><td>bbox_min</td><td style="text-align:right;font-family:var(--mono)">-2.200</td><td style="text-align:right;font-family:var(--mono)">0.350</td><td style="text-align:right;font-family:var(--mono)">2.600</td><td>KEPUTUSAN/TAFSIR</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BLMAX</td><td>burung_kiri</td><td>bbox_max</td><td style="text-align:right;font-family:var(--mono)">-1.400</td><td style="text-align:right;font-family:var(--mono)">0.450</td><td style="text-align:right;font-family:var(--mono)">3.400</td><td>KEPUTUSAN/TAFSIR</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BRMIN</td><td>burung_kanan</td><td>bbox_min</td><td style="text-align:right;font-family:var(--mono)">1.400</td><td style="text-align:right;font-family:var(--mono)">0.350</td><td style="text-align:right;font-family:var(--mono)">2.600</td><td>KEPUTUSAN/TAFSIR</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BRMAX</td><td>burung_kanan</td><td>bbox_max</td><td style="text-align:right;font-family:var(--mono)">2.200</td><td style="text-align:right;font-family:var(--mono)">0.450</td><td style="text-align:right;font-family:var(--mono)">3.400</td><td>KEPUTUSAN/TAFSIR</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BLP</td><td>burung_kiri</td><td>perch</td><td style="text-align:right;font-family:var(--mono)">-1.800</td><td style="text-align:right;font-family:var(--mono)">0.400</td><td style="text-align:right;font-family:var(--mono)">3.000</td><td>KONFIRMASI/D9</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BRP</td><td>burung_kanan</td><td>perch</td><td style="text-align:right;font-family:var(--mono)">1.800</td><td style="text-align:right;font-family:var(--mono)">0.400</td><td style="text-align:right;font-family:var(--mono)">3.000</td><td>KONFIRMASI/D9</td></tr><tr><td style="font-family:var(--mono);font-weight:600">SD1</td><td>kubah_jerami</td><td>base_front_left</td><td style="text-align:right;font-family:var(--mono)">-1.100</td><td style="text-align:right;font-family:var(--mono)">0.700</td><td style="text-align:right;font-family:var(--mono)">2.500</td><td>TAMBAHAN</td></tr><tr><td style="font-family:var(--mono);font-weight:600">SD2</td><td>kubah_jerami</td><td>base_front_right</td><td style="text-align:right;font-family:var(--mono)">1.100</td><td style="text-align:right;font-family:var(--mono)">0.700</td><td style="text-align:right;font-family:var(--mono)">2.500</td><td>TAMBAHAN</td></tr><tr><td style="font-family:var(--mono);font-weight:600">SD3</td><td>kubah_jerami</td><td>base_back_right</td><td style="text-align:right;font-family:var(--mono)">1.100</td><td style="text-align:right;font-family:var(--mono)">0.100</td><td style="text-align:right;font-family:var(--mono)">2.500</td><td>TAMBAHAN</td></tr><tr><td style="font-family:var(--mono);font-weight:600">SD4</td><td>kubah_jerami</td><td>base_back_left</td><td style="text-align:right;font-family:var(--mono)">-1.100</td><td style="text-align:right;font-family:var(--mono)">0.100</td><td style="text-align:right;font-family:var(--mono)">2.500</td><td>TAMBAHAN</td></tr><tr><td style="font-family:var(--mono);font-weight:600">SD5</td><td>kubah_jerami</td><td>top</td><td style="text-align:right;font-family:var(--mono)">0.000</td><td style="text-align:right;font-family:var(--mono)">0.400</td><td style="text-align:right;font-family:var(--mono)">3.000</td><td>TAMBAHAN</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BNL1</td><td>banner_kiri</td><td>panel_bottom_inner</td><td style="text-align:right;font-family:var(--mono)">-1.350</td><td style="text-align:right;font-family:var(--mono)">0.800</td><td style="text-align:right;font-family:var(--mono)">0.000</td><td>KONFIRMASI/D10</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BNL2</td><td>banner_kiri</td><td>panel_bottom_outer</td><td style="text-align:right;font-family:var(--mono)">-1.950</td><td style="text-align:right;font-family:var(--mono)">0.800</td><td style="text-align:right;font-family:var(--mono)">0.000</td><td>KONFIRMASI/D10</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BNL3</td><td>banner_kiri</td><td>panel_top_outer</td><td style="text-align:right;font-family:var(--mono)">-1.950</td><td style="text-align:right;font-family:var(--mono)">0.800</td><td style="text-align:right;font-family:var(--mono)">1.500</td><td>KONFIRMASI/D10</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BNL4</td><td>banner_kiri</td><td>panel_top_inner</td><td style="text-align:right;font-family:var(--mono)">-1.350</td><td style="text-align:right;font-family:var(--mono)">0.800</td><td style="text-align:right;font-family:var(--mono)">1.500</td><td>KONFIRMASI/D10</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BNR1</td><td>banner_kanan</td><td>panel_bottom_inner</td><td style="text-align:right;font-family:var(--mono)">1.350</td><td style="text-align:right;font-family:var(--mono)">0.800</td><td style="text-align:right;font-family:var(--mono)">0.000</td><td>KONFIRMASI/D10</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BNR2</td><td>banner_kanan</td><td>panel_bottom_outer</td><td style="text-align:right;font-family:var(--mono)">1.950</td><td style="text-align:right;font-family:var(--mono)">0.800</td><td style="text-align:right;font-family:var(--mono)">0.000</td><td>KONFIRMASI/D10</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BNR3</td><td>banner_kanan</td><td>panel_top_outer</td><td style="text-align:right;font-family:var(--mono)">1.950</td><td style="text-align:right;font-family:var(--mono)">0.800</td><td style="text-align:right;font-family:var(--mono)">1.500</td><td>KONFIRMASI/D10</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BNR4</td><td>banner_kanan</td><td>panel_top_inner</td><td style="text-align:right;font-family:var(--mono)">1.350</td><td style="text-align:right;font-family:var(--mono)">0.800</td><td style="text-align:right;font-family:var(--mono)">1.500</td><td>KONFIRMASI/D10</td></tr><tr><td style="font-family:var(--mono);font-weight:600">ORL</td><td>outrigger_kiri</td><td>runner_min</td><td style="text-align:right;font-family:var(--mono)">-1.300</td><td style="text-align:right;font-family:var(--mono)">0.150</td><td style="text-align:right;font-family:var(--mono)">0.000</td><td>KEPUTUSAN/KOREKSI-2B</td></tr><tr><td style="font-family:var(--mono);font-weight:600">ORL2</td><td>outrigger_kiri</td><td>runner_max</td><td style="text-align:right;font-family:var(--mono)">-1.200</td><td style="text-align:right;font-family:var(--mono)">1.750</td><td style="text-align:right;font-family:var(--mono)">0.100</td><td>KEPUTUSAN/KOREKSI-2B</td></tr><tr><td style="font-family:var(--mono);font-weight:600">ORR</td><td>outrigger_kanan</td><td>runner_min</td><td style="text-align:right;font-family:var(--mono)">1.200</td><td style="text-align:right;font-family:var(--mono)">0.150</td><td style="text-align:right;font-family:var(--mono)">0.000</td><td>KEPUTUSAN/KOREKSI-2B</td></tr><tr><td style="font-family:var(--mono);font-weight:600">ORR2</td><td>outrigger_kanan</td><td>runner_max</td><td style="text-align:right;font-family:var(--mono)">1.300</td><td style="text-align:right;font-family:var(--mono)">1.750</td><td style="text-align:right;font-family:var(--mono)">0.100</td><td>KEPUTUSAN/KOREKSI-2B</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BD1</td><td>backdrop</td><td>panel_bottom_left</td><td style="text-align:right;font-family:var(--mono)">-1.200</td><td style="text-align:right;font-family:var(--mono)">-2.700</td><td style="text-align:right;font-family:var(--mono)">0.000</td><td>TAMBAHAN</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BD2</td><td>backdrop</td><td>panel_bottom_right</td><td style="text-align:right;font-family:var(--mono)">1.200</td><td style="text-align:right;font-family:var(--mono)">-2.700</td><td style="text-align:right;font-family:var(--mono)">0.000</td><td>TAMBAHAN</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BD3</td><td>backdrop</td><td>panel_top_right</td><td style="text-align:right;font-family:var(--mono)">1.200</td><td style="text-align:right;font-family:var(--mono)">-2.700</td><td style="text-align:right;font-family:var(--mono)">2.000</td><td>TAMBAHAN</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BD4</td><td>backdrop</td><td>panel_top_left</td><td style="text-align:right;font-family:var(--mono)">-1.200</td><td style="text-align:right;font-family:var(--mono)">-2.700</td><td style="text-align:right;font-family:var(--mono)">2.000</td><td>TAMBAHAN</td></tr><tr><td style="font-family:var(--mono);font-weight:600">T1</td><td>tenda</td><td>front_left_bottom</td><td style="text-align:right;font-family:var(--mono)">-1.500</td><td style="text-align:right;font-family:var(--mono)">0.000</td><td style="text-align:right;font-family:var(--mono)">0.000</td><td>KONFIRMASI/D5</td></tr><tr><td style="font-family:var(--mono);font-weight:600">T2</td><td>tenda</td><td>front_right_bottom</td><td style="text-align:right;font-family:var(--mono)">1.500</td><td style="text-align:right;font-family:var(--mono)">0.000</td><td style="text-align:right;font-family:var(--mono)">0.000</td><td>KONFIRMASI/D5</td></tr><tr><td style="font-family:var(--mono);font-weight:600">T3</td><td>tenda</td><td>back_right_bottom</td><td style="text-align:right;font-family:var(--mono)">1.500</td><td style="text-align:right;font-family:var(--mono)">-3.000</td><td style="text-align:right;font-family:var(--mono)">0.000</td><td>KONFIRMASI/D5</td></tr><tr><td style="font-family:var(--mono);font-weight:600">T4</td><td>tenda</td><td>back_left_bottom</td><td style="text-align:right;font-family:var(--mono)">-1.500</td><td style="text-align:right;font-family:var(--mono)">-3.000</td><td style="text-align:right;font-family:var(--mono)">0.000</td><td>KONFIRMASI/D5</td></tr><tr><td style="font-family:var(--mono);font-weight:600">T5</td><td>tenda</td><td>peak</td><td style="text-align:right;font-family:var(--mono)">0.000</td><td style="text-align:right;font-family:var(--mono)">-1.500</td><td style="text-align:right;font-family:var(--mono)">3.200</td><td>ASUMSI/TBD</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BP1</td><td>tiang_burung_kiri</td><td>post_bottom</td><td style="text-align:right;font-family:var(--mono)">-1.750</td><td style="text-align:right;font-family:var(--mono)">0.400</td><td style="text-align:right;font-family:var(--mono)">2.500</td><td>KEPUTUSAN-2C</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BP2</td><td>tiang_burung_kiri</td><td>post_top</td><td style="text-align:right;font-family:var(--mono)">-1.750</td><td style="text-align:right;font-family:var(--mono)">0.400</td><td style="text-align:right;font-family:var(--mono)">3.000</td><td>KEPUTUSAN-2C</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BP3</td><td>tiang_burung_kanan</td><td>post_bottom</td><td style="text-align:right;font-family:var(--mono)">1.750</td><td style="text-align:right;font-family:var(--mono)">0.400</td><td style="text-align:right;font-family:var(--mono)">2.500</td><td>KEPUTUSAN-2C</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BP4</td><td>tiang_burung_kanan</td><td>post_top</td><td style="text-align:right;font-family:var(--mono)">1.750</td><td style="text-align:right;font-family:var(--mono)">0.400</td><td style="text-align:right;font-family:var(--mono)">3.000</td><td>KEPUTUSAN-2C</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BRL1</td><td>banner_kiri</td><td>rail_bottom_inner</td><td style="text-align:right;font-family:var(--mono)">-1.350</td><td style="text-align:right;font-family:var(--mono)">0.800</td><td style="text-align:right;font-family:var(--mono)">1.480</td><td>KEPUTUSAN-2C</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BRL2</td><td>banner_kiri</td><td>rail_bottom_outer</td><td style="text-align:right;font-family:var(--mono)">-1.950</td><td style="text-align:right;font-family:var(--mono)">0.800</td><td style="text-align:right;font-family:var(--mono)">1.480</td><td>KEPUTUSAN-2C</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BRL3</td><td>banner_kiri</td><td>rail_top_outer</td><td style="text-align:right;font-family:var(--mono)">-1.950</td><td style="text-align:right;font-family:var(--mono)">0.800</td><td style="text-align:right;font-family:var(--mono)">1.540</td><td>KEPUTUSAN-2C</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BRL4</td><td>banner_kiri</td><td>rail_top_inner</td><td style="text-align:right;font-family:var(--mono)">-1.350</td><td style="text-align:right;font-family:var(--mono)">0.800</td><td style="text-align:right;font-family:var(--mono)">1.540</td><td>KEPUTUSAN-2C</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BRR1</td><td>banner_kanan</td><td>rail_bottom_inner</td><td style="text-align:right;font-family:var(--mono)">1.350</td><td style="text-align:right;font-family:var(--mono)">0.800</td><td style="text-align:right;font-family:var(--mono)">1.480</td><td>KEPUTUSAN-2C</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BRR2</td><td>banner_kanan</td><td>rail_bottom_outer</td><td style="text-align:right;font-family:var(--mono)">1.950</td><td style="text-align:right;font-family:var(--mono)">0.800</td><td style="text-align:right;font-family:var(--mono)">1.480</td><td>KEPUTUSAN-2C</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BRR3</td><td>banner_kanan</td><td>rail_top_outer</td><td style="text-align:right;font-family:var(--mono)">1.950</td><td style="text-align:right;font-family:var(--mono)">0.800</td><td style="text-align:right;font-family:var(--mono)">1.540</td><td>KEPUTUSAN-2C</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BRR4</td><td>banner_kanan</td><td>rail_top_inner</td><td style="text-align:right;font-family:var(--mono)">1.350</td><td style="text-align:right;font-family:var(--mono)">0.800</td><td style="text-align:right;font-family:var(--mono)">1.540</td><td>KEPUTUSAN-2C</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BHL1</td><td>banner_kiri</td><td>hanger_outer_top</td><td style="text-align:right;font-family:var(--mono)">-1.800</td><td style="text-align:right;font-family:var(--mono)">0.650</td><td style="text-align:right;font-family:var(--mono)">2.000</td><td>KEPUTUSAN-2C</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BHL2</td><td>banner_kiri</td><td>hanger_outer_bottom</td><td style="text-align:right;font-family:var(--mono)">-1.800</td><td style="text-align:right;font-family:var(--mono)">0.820</td><td style="text-align:right;font-family:var(--mono)">1.540</td><td>KEPUTUSAN-2C</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BHL3</td><td>banner_kiri</td><td>hanger_inner_top</td><td style="text-align:right;font-family:var(--mono)">-1.500</td><td style="text-align:right;font-family:var(--mono)">0.650</td><td style="text-align:right;font-family:var(--mono)">2.000</td><td>KEPUTUSAN-2C</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BHL4</td><td>banner_kiri</td><td>hanger_inner_bottom</td><td style="text-align:right;font-family:var(--mono)">-1.500</td><td style="text-align:right;font-family:var(--mono)">0.820</td><td style="text-align:right;font-family:var(--mono)">1.540</td><td>KEPUTUSAN-2C</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BHR1</td><td>banner_kanan</td><td>hanger_inner_top</td><td style="text-align:right;font-family:var(--mono)">1.500</td><td style="text-align:right;font-family:var(--mono)">0.650</td><td style="text-align:right;font-family:var(--mono)">2.000</td><td>KEPUTUSAN-2C</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BHR2</td><td>banner_kanan</td><td>hanger_inner_bottom</td><td style="text-align:right;font-family:var(--mono)">1.500</td><td style="text-align:right;font-family:var(--mono)">0.820</td><td style="text-align:right;font-family:var(--mono)">1.540</td><td>KEPUTUSAN-2C</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BHR3</td><td>banner_kanan</td><td>hanger_outer_top</td><td style="text-align:right;font-family:var(--mono)">1.800</td><td style="text-align:right;font-family:var(--mono)">0.650</td><td style="text-align:right;font-family:var(--mono)">2.000</td><td>KEPUTUSAN-2C</td></tr><tr><td style="font-family:var(--mono);font-weight:600">BHR4</td><td>banner_kanan</td><td>hanger_outer_bottom</td><td style="text-align:right;font-family:var(--mono)">1.800</td><td style="text-align:right;font-family:var(--mono)">0.820</td><td style="text-align:right;font-family:var(--mono)">1.540</td><td>KEPUTUSAN-2C</td></tr><tr><td style="font-family:var(--mono);font-weight:600">WS1</td><td>strip_peringatan</td><td>left_bottom</td><td style="text-align:right;font-family:var(--mono)">-1.700</td><td style="text-align:right;font-family:var(--mono)">0.652</td><td style="text-align:right;font-family:var(--mono)">2.040</td><td>KEPUTUSAN-2C</td></tr><tr><td style="font-family:var(--mono);font-weight:600">WS2</td><td>strip_peringatan</td><td>right_bottom</td><td style="text-align:right;font-family:var(--mono)">1.700</td><td style="text-align:right;font-family:var(--mono)">0.652</td><td style="text-align:right;font-family:var(--mono)">2.040</td><td>KEPUTUSAN-2C</td></tr><tr><td style="font-family:var(--mono);font-weight:600">WS3</td><td>strip_peringatan</td><td>right_top</td><td style="text-align:right;font-family:var(--mono)">1.700</td><td style="text-align:right;font-family:var(--mono)">0.652</td><td style="text-align:right;font-family:var(--mono)">2.120</td><td>KEPUTUSAN-2C</td></tr><tr><td style="font-family:var(--mono);font-weight:600">WS4</td><td>strip_peringatan</td><td>left_top</td><td style="text-align:right;font-family:var(--mono)">-1.700</td><td style="text-align:right;font-family:var(--mono)">0.652</td><td style="text-align:right;font-family:var(--mono)">2.120</td><td>KEPUTUSAN-2C</td></tr><tr><td style="font-family:var(--mono);font-weight:600">PB1</td><td>pemberat_kiri</td><td>block_min</td><td style="text-align:right;font-family:var(--mono)">-1.350</td><td style="text-align:right;font-family:var(--mono)">1.550</td><td style="text-align:right;font-family:var(--mono)">0.100</td><td>TBD/KEPUTUSAN-2C</td></tr><tr><td style="font-family:var(--mono);font-weight:600">PB2</td><td>pemberat_kiri</td><td>block_max</td><td style="text-align:right;font-family:var(--mono)">-1.150</td><td style="text-align:right;font-family:var(--mono)">1.750</td><td style="text-align:right;font-family:var(--mono)">0.300</td><td>TBD/KEPUTUSAN-2C</td></tr><tr><td style="font-family:var(--mono);font-weight:600">PB3</td><td>pemberat_kanan</td><td>block_min</td><td style="text-align:right;font-family:var(--mono)">1.150</td><td style="text-align:right;font-family:var(--mono)">1.550</td><td style="text-align:right;font-family:var(--mono)">0.100</td><td>TBD/KEPUTUSAN-2C</td></tr><tr><td style="font-family:var(--mono);font-weight:600">PB4</td><td>pemberat_kanan</td><td>block_max</td><td style="text-align:right;font-family:var(--mono)">1.350</td><td style="text-align:right;font-family:var(--mono)">1.750</td><td style="text-align:right;font-family:var(--mono)">0.300</td><td>TBD/KEPUTUSAN-2C</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 3: STRUKTUR -->
+  <section id="tab-struktur" class="panel">
+    <div class="section-bar">
+      <h2 class="section-title">Detail Sambungan &amp; Laporan Struktur (Tahap 3)</h2>
+      <div class="btn-row">
+        <a class="btn" href="docs/03-struktur/detail-1.html" target="_blank" rel="noopener">Detail 1 ↗</a>
+        <a class="btn" href="docs/03-struktur/detail-2.html" target="_blank" rel="noopener">Detail 2 ↗</a>
+        <a class="btn" href="docs/03-struktur/laporan-struktur.md" target="_blank" rel="noopener">File .md ↗</a>
+      </div>
+    </div>
+    <div class="grid-2">
+      <article class="card">
+        <div class="card-head">
+          <div>
+            <h3 class="card-title">Detail Sambungan 1 — Pilar, Balok, Tiang Burung</h3>
+            <p class="card-desc">D1 Pilar–Runner (notch + saddle + 2×M10), D2 Balok–Pilar (4×M10 + gusset), D3 Tiang Burung–Balok.</p>
+          </div>
+          <span class="badge">Skala 1:4</span>
+        </div>
+        <div class="card-media" data-zoom="docs/03-struktur/detail-1.png" data-title="Detail Sambungan 1" data-link="docs/03-struktur/detail-1.html">
+          <img src="docs/03-struktur/detail-1.png" alt="Detail Sambungan 1" loading="lazy">
+        </div>
+        <div class="card-foot">
+          <div class="link-group">
+            <a href="docs/03-struktur/detail-1.html" target="_blank" rel="noopener">Buka HTML ↗</a>
+            <a href="docs/03-struktur/detail-1.svg" target="_blank" rel="noopener">SVG ↗</a>
+            <a href="docs/03-struktur/detail-1.png" target="_blank" rel="noopener">PNG ↗</a>
+          </div>
+          <button class="btn" type="button" data-zoom="docs/03-struktur/detail-1.png" data-title="Detail Sambungan 1" data-link="docs/03-struktur/detail-1.html">Perbesar</button>
+        </div>
+      </article>
+      <article class="card">
+        <div class="card-head">
+          <div>
+            <h3 class="card-title">Detail Sambungan 2 — Banner, Pemberat, Lengkung</h3>
+            <p class="card-desc">D4 Banner–Rel–Hanger (2 rod Ø6 + safety wire), D5 Box Pemberat 2×300 kg, D6 Potongan Lengkung &amp; Burung.</p>
+          </div>
+          <span class="badge">Rev 3</span>
+        </div>
+        <div class="card-media" data-zoom="docs/03-struktur/detail-2.png" data-title="Detail Sambungan 2" data-link="docs/03-struktur/detail-2.html">
+          <img src="docs/03-struktur/detail-2.png" alt="Detail Sambungan 2" loading="lazy">
+        </div>
+        <div class="card-foot">
+          <div class="link-group">
+            <a href="docs/03-struktur/detail-2.html" target="_blank" rel="noopener">Buka HTML ↗</a>
+            <a href="docs/03-struktur/detail-2.svg" target="_blank" rel="noopener">SVG ↗</a>
+            <a href="docs/03-struktur/detail-2.png" target="_blank" rel="noopener">PNG ↗</a>
+          </div>
+          <button class="btn" type="button" data-zoom="docs/03-struktur/detail-2.png" data-title="Detail Sambungan 2" data-link="docs/03-struktur/detail-2.html">Perbesar</button>
+        </div>
+      </article>
+    </div>
+    <article class="doc-box">
+      <h1>Tahap 3 — Struktur, Tumpuan, dan Stabilitas</h1>
+<p><strong>Proyek:</strong> Gapura Papua STMKG, freestanding di depan tenda 3×3 m <strong>Status:</strong> perhitungan pendahuluan untuk desain, <strong>bukan sertifikasi struktur</strong> <strong>Revisi:</strong> 3 — 27 November 2026 <strong>Dasar geometri:</strong> Tahap 2C + revisi 3A/3B (banner digeser keluar, pemberat menjadi box)</p>
+<hr>
+<h2>1. Tujuan dan batas</h2>
+<p>Dokumen ini memeriksa:</p>
+<ol><li>stabilitas guling dan geser akibat angin;</li><li>tumpuan dan kebutuhan pemberat;</li><li>kekuatan balok, pilar, dan sambungan utama;</li><li>batas operasi dan rencana angin;</li><li>kecukupan material yang ada.</li></ol>
+<p>Yang <strong>tidak</strong> termasuk: analisis dinamis, sambungan las, pondasi, uji tarik material, dan verifikasi lapangan. Semua angka adalah estimasi konservatif dengan asumsi yang ditandai. Struktur belum boleh disebut &quot;aman&quot; sebelum diperiksa insinyur berwenang dan diuji coba di lokasi.</p>
+<hr>
+<h2>2. Dasar desain</h2>
+<h3>2.1 Geometri final (Tahap 2C + revisi 3)</h3>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">Elemen</th><th style="text-align:left">Dimensi</th><th style="text-align:left">Posisi</th><th style="text-align:left">Label</th></tr></thead><tbody><tr><td style="text-align:left">Balok</td><td style="text-align:left">3.600 × 500 × 500 mm</td><td style="text-align:left">z = 2.000–2.500; y = 0.150–0.650</td><td style="text-align:left">K2/K3</td></tr><tr><td style="text-align:left">Pilar</td><td style="text-align:left">500×500 → 400×400 mm, h = 2.000</td><td style="text-align:left">x = ±1.000…±1.500; y = 0.150–0.650</td><td style="text-align:left">K1/K2</td></tr><tr><td style="text-align:left">Bukaan</td><td style="text-align:left">2.000 m bawah; 2.200 m atas</td><td style="text-align:left">—</td><td style="text-align:left">K2</td></tr><tr><td style="text-align:left">Lengkung</td><td style="text-align:left">band 250 mm; naik 500 mm</td><td style="text-align:left">y = 0.350–0.450; z = 2.500–3.000</td><td style="text-align:left">D4</td></tr><tr><td style="text-align:left">Burung</td><td style="text-align:left">800 × 800 × 100 mm</td><td style="text-align:left">x = ±1.400…±2.200; z = 2.600–3.400</td><td style="text-align:left">D9</td></tr><tr><td style="text-align:left">Tiang burung</td><td style="text-align:left">100 × 100 × 500 mm</td><td style="text-align:left">x = ±1.750; y = 0.400; z = 2.500–3.000</td><td style="text-align:left">KEPUTUSAN-2C</td></tr><tr><td style="text-align:left">Banner</td><td style="text-align:left">600 × 1500 mm</td><td style="text-align:left">x = ±1.500…±2.100; y = 0.800; z = 0–1.500</td><td style="text-align:left">KEPUTUSAN-3A</td></tr><tr><td style="text-align:left">Rel banner</td><td style="text-align:left">600 × 80 × 60 mm</td><td style="text-align:left">x = ±1.500…±2.100; y = 0.760–0.840; z = 1.480–1.540</td><td style="text-align:left">KEPUTUSAN-2C/3A</td></tr><tr><td style="text-align:left">Runner</td><td style="text-align:left">1.600 × 100 × 100 mm</td><td style="text-align:left">x = ±1.200…±1.300; y = 0.150–1.750</td><td style="text-align:left">KOREKSI-2B</td></tr><tr><td style="text-align:left">Box pemberat</td><td style="text-align:left">500 × 1.050 × 400 mm</td><td style="text-align:left">x = ±0.980…±1.480; y = 0.700–1.750; z = 0.100–0.500</td><td style="text-align:left">KEPUTUSAN-3B</td></tr><tr><td style="text-align:left">Tenda</td><td style="text-align:left">3.000 × 3.000 mm; puncak 3.200</td><td style="text-align:left">y = −3.000…0</td><td style="text-align:left">D5/ASUMSI</td></tr></tbody></table></div>
+<p><strong>Revisi 3A:</strong> banner digeser 150 mm keluar (dari x = ±1.350…±1.950 menjadi ±1.500…±2.100) agar tidak bertabrakan dengan box pemberat. Lebar dan tinggi banner tidak berubah. Hanger dipindah ke x = ±1.500 dan ±1.800; rel menumpu di dua titik dengan kantilever 300 mm ke luar.</p>
+<p><strong>Revisi 3B:</strong> pemberat berubah dari blok 200×200×200 mm (placeholder 2C) menjadi box 500×1.050×400 mm per sisi, berisi 300 kg pasir/kerikil. Box duduk di atas runner dan dua kaki kayu, di depan pilar, dengan celah 20 mm ke banner.</p>
+<h3>2.2 Material (asumsi konservatif)</h3>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">Material</th><th style="text-align:left">Asumsi</th><th style="text-align:left">Label</th></tr></thead><tbody><tr><td style="text-align:left">Kayu</td><td style="text-align:left">45 × 70 mm, E = 10.000 MPa, izin lentur 8 MPa, izin tekan 10 MPa</td><td style="text-align:left"><code>[ASUMSI]</code></td></tr><tr><td style="text-align:left">Plywood</td><td style="text-align:left">9 mm, E = 6.000 MPa, izin lentur 12 MPa</td><td style="text-align:left"><code>[ASUMSI]</code></td></tr><tr><td style="text-align:left">Baut M10 4.6</td><td style="text-align:left">tarik 12 kN; geser 16 kN; faktor sambungan kayu 0.5</td><td style="text-align:left"><code>[ASUMSI]</code></td></tr><tr><td style="text-align:left">Baut M8 4.6</td><td style="text-align:left">tarik 7 kN; geser 9 kN; faktor sambungan kayu 0.5</td><td style="text-align:left"><code>[ASUMSI]</code></td></tr><tr><td style="text-align:left">Pasir/kerikil</td><td style="text-align:left">1.600 kg/m³ (kering, padat)</td><td style="text-align:left"><code>[ASUMSI]</code></td></tr><tr><td style="text-align:left">Paving</td><td style="text-align:left">daya dukung izin 100 kPa</td><td style="text-align:left"><code>[ASUMSI]</code></td></tr><tr><td style="text-align:left">Beban angin</td><td style="text-align:left">v = 20 m/s; Cp = 1.3</td><td style="text-align:left"><code>[ASUMSI]</code></td></tr></tbody></table></div>
+<h3>2.3 Berat</h3>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">Komponen</th><th style="text-align:right">Massa</th><th style="text-align:right">Berat</th></tr></thead><tbody><tr><td style="text-align:left">Superstruktur (kayu, plywood, lengkung, burung, banner, alat)</td><td style="text-align:right">180 kg</td><td style="text-align:right">1,77 kN</td></tr><tr><td style="text-align:left">Isi pemberat 2 × 300 kg</td><td style="text-align:right">600 kg</td><td style="text-align:right">5,89 kN</td></tr><tr><td style="text-align:left">Box + kaki + lid (2 box)</td><td style="text-align:right">≈ 30 kg</td><td style="text-align:right">0,29 kN</td></tr><tr><td style="text-align:left"><strong>Total</strong></td><td style="text-align:right"><strong>810 kg</strong></td><td style="text-align:right"><strong>7,95 kN</strong></td></tr></tbody></table></div>
+<p>Untuk perhitungan guling, berat box (30 kg) diabaikan sehingga hasilnya konservatif. Pusat massa superstruktur diasumsikan di <strong>y = 0,42 m</strong>. Pusat massa isi pemberat di <strong>y = 1,225 m</strong> (box y = 0,700–1,750).</p>
+<h3>2.4 Angin</h3>
+<p>Kecepatan rencana operasi:</p>
+<pre><code>v = 20 m/s
+q = 0,5 × ρ × v² = 0,5 × 1,225 × 20² = 245 Pa
+p = Cp × q = 1,3 × 245 = 318,5 Pa ≈ 320 Pa</code></pre>
+<p><code>Cp = 1,3</code> mencakup bentuk persegi dan gust sedang. <code>[ASUMSI]</code></p>
+<hr>
+<h2>3. Beban angin efektif</h2>
+<p>Luas proyeksi dan porositas:</p>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">Komponen</th><th style="text-align:right">A bruto (m²)</th><th style="text-align:right">Porositas</th><th style="text-align:right">A efektif (m²)</th><th style="text-align:right">z pusat (m)</th></tr></thead><tbody><tr><td style="text-align:left">Balok</td><td style="text-align:right">1,80</td><td style="text-align:right">1,00</td><td style="text-align:right">1,80</td><td style="text-align:right">2,25</td></tr><tr><td style="text-align:left">Pilar (2)</td><td style="text-align:right">2,00</td><td style="text-align:right">1,00</td><td style="text-align:right">2,00</td><td style="text-align:right">1,00</td></tr><tr><td style="text-align:left">Lengkung terekspos</td><td style="text-align:right">0,60</td><td style="text-align:right">1,00</td><td style="text-align:right">0,60</td><td style="text-align:right">2,70</td></tr><tr><td style="text-align:left">Burung (2)</td><td style="text-align:right">1,28</td><td style="text-align:right">0,50</td><td style="text-align:right">0,64</td><td style="text-align:right">3,00</td></tr><tr><td style="text-align:left">Banner (2)</td><td style="text-align:right">1,80</td><td style="text-align:right">0,50</td><td style="text-align:right">0,90</td><td style="text-align:right">0,75</td></tr><tr><td style="text-align:left">Tiang burung (2)</td><td style="text-align:right">0,10</td><td style="text-align:right">1,00</td><td style="text-align:right">0,10</td><td style="text-align:right">2,75</td></tr><tr><td style="text-align:left">Box pemberat (2)</td><td style="text-align:right">0,40</td><td style="text-align:right">1,00</td><td style="text-align:right">0,40</td><td style="text-align:right">0,30</td></tr><tr><td style="text-align:left"><strong>Total</strong></td><td style="text-align:right"><strong>7,98</strong></td><td style="text-align:right">—</td><td style="text-align:right"><strong>6,44</strong></td><td style="text-align:right">—</td></tr></tbody></table></div>
+<pre><code>A_eff = 6,44 m²
+z_c = Σ(A_i × z_i) / ΣA_i = 1,65 m
+F_w = p × A_eff = 320 × 6,44 = 2,061 kN
+M_w = F_w × z_c = 2,061 × 1,65 = 3,40 kN·m</code></pre>
+<hr>
+<h2>4. Stabilitas guling</h2>
+<p>Dua pivot diperiksa:</p>
+<ul><li><strong>A — tepi belakang</strong> y = 0,150 m (angin dari depan, atas terdorong ke tenda);</li><li><strong>B — tepi depan</strong> y = 1,750 m (angin dari belakang, atas terdorong ke pengunjung).</li></ul>
+<h3>4.1 Guling ke belakang (pivot A)</h3>
+<pre><code>M_penahan = W_s × (0,42 − 0,15) + W_b × (1,225 − 0,15)
+          = 1,77 × 0,27 + 5,89 × 1,075
+          = 0,478 + 6,332 = 6,810 kN·m
+
+FOS_A = 6,810 / 3,40 = 2,00</code></pre>
+<h3>4.2 Guling ke depan (pivot B)</h3>
+<pre><code>M_penahan = W_s × (1,75 − 0,42) + W_b × (1,75 − 1,225)
+          = 1,77 × 1,33 + 5,89 × 0,525
+          = 2,354 + 3,092 = 5,446 kN·m
+
+FOS_B = 5,446 / 3,40 = 1,60</code></pre>
+<p><strong>Kedua FOS ≥ 1,5.</strong> Dengan 600 kg pemberat, batas operasi 20 m/s tercapai. FOS minimum adalah 1,60 pada angin dari belakang.</p>
+<h3>4.3 Tanpa pemberat</h3>
+<pre><code>FOS_A = 0,478 / 3,40 = 0,14
+FOS_B = 2,354 / 3,40 = 0,69</code></pre>
+<p><strong>Gapura tidak boleh berdiri tanpa pemberat.</strong> Ini batas mutlak, bukan saran.</p>
+<h3>4.4 Pemberat 300 kg total (150 kg/sisi)</h3>
+<pre><code>M_A = 0,478 + 1,47 × 1,075 = 2,058 kN·m → FOS_A = 0,61
+M_B = 2,354 + 1,47 × 0,525 = 3,126 kN·m → FOS_B = 0,92</code></pre>
+<p>Gagal. <strong>600 kg adalah minimum desain.</strong> Dengan 650 kg total, FOS_B ≈ 1,68; dengan 700 kg, FOS_B ≈ 1,76.</p>
+<h3>4.5 Ringkasan</h3>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">Kondisi</th><th style="text-align:right">FOS_A</th><th style="text-align:right">FOS_B</th><th style="text-align:left">Status</th></tr></thead><tbody><tr><td style="text-align:left">Tanpa pemberat</td><td style="text-align:right">0,14</td><td style="text-align:right">0,69</td><td style="text-align:left"><strong>tidak boleh</strong></td></tr><tr><td style="text-align:left">300 kg total</td><td style="text-align:right">0,61</td><td style="text-align:right">0,92</td><td style="text-align:left">gagal</td></tr><tr><td style="text-align:left"><strong>600 kg total</strong></td><td style="text-align:right"><strong>2,00</strong></td><td style="text-align:right"><strong>1,60</strong></td><td style="text-align:left"><strong>minimum desain</strong></td></tr><tr><td style="text-align:left">650 kg total</td><td style="text-align:right">2,16</td><td style="text-align:right">1,68</td><td style="text-align:left">disarankan jika ruang izin</td></tr></tbody></table></div>
+<hr>
+<h2>5. Geser dan bearing</h2>
+<h3>5.1 Geser</h3>
+<pre><code>R = μ × W_total = 0,50 × 7,66 = 3,83 kN
+FOS_geser = 3,83 / 2,061 = 1,86</code></pre>
+<p>Dengan paving basah μ = 0,35:</p>
+<pre><code>R = 2,68 kN; FOS = 1,30</code></pre>
+<p><strong>Syarat:</strong> hanya dipasang di paving kering; tambahkan pad karet 6 mm di bawah kaki box pemberat dan alas pilar. Jika hujan lebat/paving basah, operasi dihentikan.</p>
+<h3>5.2 Bearing</h3>
+<pre><code>A_tumpuan = 2 × (0,50 × 0,50) + 4 × (0,10 × 1,05)
+          = 0,50 + 0,42 = 0,92 m²
+p_rata = 7,66 / 0,92 = 8,3 kPa
+p_max_kaki_box = 1,47 / 0,105 = 14,0 kPa
+p_max_pilar = 0,90 / 0,25 = 3,6 kPa</code></pre>
+<p>Semua jauh di bawah 100 kPa. Bearing bukan penentu; yang kritis adalah guling dan geser. Paving harus rata dan tidak berlubang; gunakan alas plywood 12 mm di bawah kaki box untuk menyebar beban.</p>
+<hr>
+<h2>6. Pemeriksaan elemen</h2>
+<h3>6.1 Balok</h3>
+<p>Bentang bersih antar pilar atas = 2,20 m. Beban angin balok:</p>
+<pre><code>w = 1,80 × 320 / 3,60 = 160 N/m
+M = w L² / 8 = 160 × 2,20² / 8 = 96,8 N·m</code></pre>
+<p>Section box 500×500 dengan plywood 9 mm dan 4 flange kayu 45×70:</p>
+<pre><code>I ≈ 1,31 × 10⁻³ m⁴
+S = I / 0,25 = 5,24 × 10⁻³ m³
+σ = M / S = 96,8 / 5,24e-3 = 18,5 kPa = 0,019 MPa
+δ = 5 w L⁴ / (384 E I) = 0,004 mm</code></pre>
+<p>Tegangan dan defleksi sangat kecil. <strong>Balok tidak kritis untuk lentur</strong>; yang kritis adalah sambungan dan guling. Kantilever 0,70 m di ujung balok juga kecil: M = 160 × 0,70² / 2 = 39 N·m.</p>
+<h3>6.2 Pilar</h3>
+<p>Beban aksial per pilar ≈ 0,90 kN. Luas kayu 4 × 45 × 70 = 12.600 mm²:</p>
+<pre><code>σ_aksial = 900 / 12.600 = 0,071 MPa</code></pre>
+<p>Momen angin per pilar (A = 1,0 m², resultan di z = 1,0 m):</p>
+<pre><code>M_p = 320 × 1,0 = 320 N·m
+I_4post ≈ 5,82 × 10⁸ mm⁴; S ≈ 2,33 × 10⁶ mm³
+σ_lentur = 320.000 / 2,33e6 = 0,137 MPa
+σ_total = 0,071 + 0,137 = 0,208 MPa &lt;&lt; 8 MPa</code></pre>
+<p>Pilar 500×500 dengan 4 post 45×70 tidak kritis terhadap tekan/lentur; stabilitas global yang menentukan.</p>
+<h3>6.3 Lengkung dan burung</h3>
+<p>Lengkung adalah band 250 mm dari kayu laminasi/kerf + skin. Beban angin 0,6 m² × 320 = 192 N, ditahan oleh dua ujung di atas balok. Burung 800×800×100 mm dari plywood 9 mm; berat ≈ 4 kg/burung; angin 0,32 m² efektif × 320 = 102 N per burung. Tiang burung 100×100×500 menahan momen 102 × 0,4 = 41 N·m; section modulus 100×100²/6 = 1,67e5 mm³; σ = 0,25 MPa. Aman.</p>
+<hr>
+<h2>7. Sambungan</h2>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">Sambungan</th><th style="text-align:left">Gaya desain</th><th style="text-align:left">Alat</th><th style="text-align:left">Cek</th></tr></thead><tbody><tr><td style="text-align:left">Balok–pilar</td><td style="text-align:left">V = 0,97 kN; M = 0,48 kN·m</td><td style="text-align:left">4 × M10 + gusset plywood 9 mm 200×200, dua sisi</td><td style="text-align:left">T tarik 1,6 kN/baut; izin 6 kN → FOS 3,7</td></tr><tr><td style="text-align:left">Pilar–runner</td><td style="text-align:left">Uplift 0,72 kN; geser 0,97 kN</td><td style="text-align:left">notch 100×100 + 2 saddle block 100×100×300 + 2 × M10 tembus + 2 gusset 200×200×9</td><td style="text-align:left">Geser 0,49 kN/baut; izin 8 kN → FOS 16</td></tr><tr><td style="text-align:left">Tiang burung–balok</td><td style="text-align:left">V = 0,20 kN; M = 0,10 kN·m</td><td style="text-align:left">2 × M8 × 160 + blocking 100×100×100 dalam balok + base plate 150×150×9</td><td style="text-align:left">1,0 kN/baut; izin 4 kN → FOS 4</td></tr><tr><td style="text-align:left">Banner–rel</td><td style="text-align:left">0,14 kN/hanger</td><td style="text-align:left">2 × rod 6 mm + eye screw + hook + safety wire</td><td style="text-align:left">izin 2 kN → FOS 14</td></tr><tr><td style="text-align:left">Box pemberat–runner</td><td style="text-align:left">0,97 kN/box</td><td style="text-align:left">2 × M8 + 2 strap 25 mm</td><td style="text-align:left">gesekan + baut</td></tr><tr><td style="text-align:left">Skin plywood–rangka</td><td style="text-align:left">7,2 N/sekrup</td><td style="text-align:left">sekrup 4×40 @150 mm + PU</td><td style="text-align:left">pull-through &gt; 200 N</td></tr></tbody></table></div>
+<p><strong>Catatan:</strong> semua baut harus tembus dengan ring lebar (Ø ≥ 30 mm) di kedua sisi kayu. Gusset plywood dipasang bolak-balik dengan lem PU + sekrup. Jangan mengandalkan sekrup saja untuk menahan momen.</p>
+<h3>7.1 Detail pilar–runner (KEPUTUSAN-3C)</h3>
+<ol><li>Potong <strong>notch 100×100 mm</strong> pada bottom frame dan kulit depan/belakang pilar, dari y = 0,150 sampai 0,650, di x = 1,200–1,300 (kiri: −1,300…−1,200).</li><li>Letakkan runner 100×100 di dalam notch, rata dengan paving.</li><li>Pasang <strong>2 saddle block 100×100×300 mm</strong> di kiri-kanan runner, di dalam pilar, direkatkan dan disekrup ke bottom frame.</li><li>Bor <strong>2 × M10</strong> horizontal menembus saddle block–runner–saddle block, di y = 0,25 dan 0,55; ring lebar di kedua sisi.</li><li>Pasang <strong>2 gusset plywood 9 mm 200×200</strong> di luar pilar, menghubungkan runner ke kulit depan pilar; lem + sekrup 4×40 @75 mm.</li><li>Seal semua potongan dengan cat kayu/waterproof.</li></ol>
+<h3>7.2 Detail balok–pilar (KEPUTUSAN-3D)</h3>
+<ol><li>Balok diletakkan di atas pilar; soffit balok z = 2,000.</li><li>Bor <strong>4 × M10</strong> vertikal menembus bottom rail balok dan top rail pilar, pada jarak 100 mm dari tepi, dengan ring 30 mm.</li><li>Pasang <strong>gusset plywood 9 mm 200×200</strong> di dua sisi pertemuan, lem PU + sekrup.</li><li>Cek plumb pilar sebelum mengencangkan; gunakan shim 2–3 mm jika perlu.</li><li>Tutup kepala baut dengan dempul kayu dan cat.</li></ol>
+<h3>7.3 Detail tiang burung–balok (KEPUTUSAN-3E)</h3>
+<ol><li>Pasang <strong>blocking 100×100×100 mm</strong> di dalam balok, di x = ±1,750, y = 0,350–0,450, z = 2,400–2,500; lem + sekrup ke rangka balok.</li><li>Letakkan <strong>base plate plywood 150×150×9 mm</strong> di atas kulit balok, di atas blocking.</li><li>Bor <strong>2 × M8 × 160 mm</strong> menembus base plate, kulit balok, dan blocking; ring 25 mm.</li><li>Pasang tiang 100×100×500 mm; cek vertikal; kencangkan.</li><li>Burung diikat ke tiang dengan <strong>2 × M8</strong> melalui tab 100×100×12 mm; tab masuk ke celah di badan burung.</li></ol>
+<h3>7.4 Detail banner–rel–hanger (KEPUTUSAN-3F)</h3>
+<ol><li>Rel 600×80×60 mm di z = 1,480–1,540, y = 0,760–0,840.</li><li>Dua hanger rod galvanis 6 mm, dari eye screw di soffit balok (x = ±1,500 dan ±1,800, y = 0,650, z = 2,000) ke hook di rel (y = 0,820, z = 1,540). Panjang rod ≈ 490 mm.</li><li>Rel menumpu di x = 1,500 dan 1,800; kantilever 300 mm ke x = 2,100.</li><li>Banner 600×1500 dijahit dengan sleeve atas; masukkan rel; kencangkan dengan 3 sekrup kecil di tiap ujung.</li><li>Pasang <strong>safety wire</strong> 1,5 mm dari eye screw ke hook agar banner tidak lepas saat angin.</li></ol>
+<h3>7.5 Detail box pemberat–runner (KEPUTUSAN-3G)</h3>
+<ol><li>Box 500×1.050×400 mm, dinding plywood 9 mm/OSB + rangka 45×70, dua kaki 100×100×1.050 mm.</li><li>Letakkan box di atas runner, dengan runner di antara kedua kaki; alas kaki diberi pad karet 6 mm.</li><li>Isi 12 kantong × 25 kg per box (300 kg); padatkan; tutup lid.</li><li>Ikat box ke runner dengan <strong>2 strap 25 mm</strong> di y = 0,90 dan 1,55, plus <strong>2 × M8</strong> melalui bottom box ke runner.</li><li>Beri celah 20 mm ke banner; jangan menaruh beban tambahan di atas box saat angin.</li></ol>
+<hr>
+<h2>8. Desain box pemberat</h2>
+<p>Setiap sisi:</p>
+<pre><code>Box: 500 (x) × 1.050 (y) × 400 (z) mm
+Isi: 300 kg pasir/kerikil = 0,1875 m³ (89% dari volume box 0,21 m³)
+Kantong: 12 × 25 kg per box; 24 kantong total
+Posisi: x = ±0,980…±1,480; y = 0,700–1,750; z = 0,100–0,500</code></pre>
+<p>Konstruksi:</p>
+<ul><li>shell plywood 9 mm/OSB + rangka kayu 45×70;</li><li>dua kaki 100×100×1.050 mm di sisi kiri-kanan runner;</li><li>alas kaki + pad karet 6 mm;</li><li>tutup plywood yang bisa dibuka untuk mengisi/mengeluarkan kantong;</li><li>2 baut M8 + 2 strap ke runner;</li><li>dicat warna paving/kayu agar menyatu.</li></ul>
+<p>Fungsi ganda: pemberat + planter/bench rendah. Jangan duduk/berdiri di atas box saat angin kencang.</p>
+<hr>
+<h2>9. Batas operasi dan rencana angin</h2>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">Kondisi</th><th style="text-align:left">Tindakan</th></tr></thead><tbody><tr><td style="text-align:left">v ≤ 20 m/s (72 km/h)</td><td style="text-align:left">boleh berdiri dengan 600 kg pemberat, banner terpasang</td></tr><tr><td style="text-align:left">20 &lt; v ≤ 25 m/s</td><td style="text-align:left">lepas banner (mengurangi 0,90 m²), tambah 4 kantong per sisi, atau bongkar</td></tr><tr><td style="text-align:left">v &gt; 25 m/s atau badai</td><td style="text-align:left">bongkar/lipat gapura; jangan andalkan pemberat</td></tr><tr><td style="text-align:left">Paving basah/licin</td><td style="text-align:left">hentikan operasi; pasang pad karet; keringkan</td></tr><tr><td style="text-align:left">Setelah hujan/angin</td><td style="text-align:left">periksa baut, strap, box, banner, dan plumb</td></tr></tbody></table></div>
+<p>Rencana bongkar:</p>
+<ol><li>lepas banner dan burung (ringan);</li><li>lepas baut pilar–runner;</li><li>turunkan balok+pilar bersama (4 orang) atau bongkar per komponen;</li><li>simpan di tempat kering.</li></ol>
+<hr>
+<h2>10. Temuan material</h2>
+<p>Perhitungan ini mengasumsikan box plywood dengan rangka kayu. Dengan material awal <strong>2 lembar plywood 9 mm + 8 balok 4 m</strong>, cakupan tidak cukup untuk versi kulit penuh. Ada dua jalur:</p>
+<h3>10.1 Versi Rekomendasi — 3 lembar plywood</h3>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">Kebutuhan plywood tampak</th><th style="text-align:right">Luas</th></tr></thead><tbody><tr><td style="text-align:left">Kulit depan balok</td><td style="text-align:right">1,80 m²</td></tr><tr><td style="text-align:left">Kulit bawah balok (soffit)</td><td style="text-align:right">1,80 m²</td></tr><tr><td style="text-align:left">Kulit depan pilar (2)</td><td style="text-align:right">2,00 m²</td></tr><tr><td style="text-align:left">Burung (2, 800×800)</td><td style="text-align:right">1,28 m²</td></tr><tr><td style="text-align:left">Lengkung + gusset + cadangan</td><td style="text-align:right">0,60 m²</td></tr><tr><td style="text-align:left"><strong>Total</strong></td><td style="text-align:right"><strong>7,48 m²</strong></td></tr><tr><td style="text-align:left">2 lembar existing (1220×2440)</td><td style="text-align:right">5,95 m²</td></tr><tr><td style="text-align:left"><strong>Kekurangan</strong></td><td style="text-align:right"><strong>1,53 m²</strong></td></tr></tbody></table></div>
+<p><strong>Cukup dengan 1 lembar tambahan</strong> (2,98 m²), total 3 lembar, sisa ≈ 1,45 m² untuk lid box/cadangan. Box pemberat memakai kayu reklaim/OSB, bukan jatah plywood ini.</p>
+<h3>10.2 Versi Hemat — 2 lembar plywood</h3>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">Kebutuhan</th><th style="text-align:right">Luas</th></tr></thead><tbody><tr><td style="text-align:left">Kulit depan balok</td><td style="text-align:right">1,80 m²</td></tr><tr><td style="text-align:left">Kulit depan pilar (2)</td><td style="text-align:right">2,00 m²</td></tr><tr><td style="text-align:left">Burung 600×600 (2)</td><td style="text-align:right">0,72 m²</td></tr><tr><td style="text-align:left">Gusset + cadangan</td><td style="text-align:right">0,50 m²</td></tr><tr><td style="text-align:left"><strong>Total</strong></td><td style="text-align:right"><strong>5,02 m²</strong></td></tr></tbody></table></div>
+<p>Soffit balok memakai kain tebal dicat, lengkung memakai kain, banner memakai flexi/banner cloth, box pemberat memakai kayu reklaim. Sisa ≈ 0,93 m². Konsekuensi: kekakuan balok sedikit turun, burung lebih kecil (total lebar 4,0 m; G ≥ 0,50 m), dan soffit kain perlu dirawat. Stabilitas global tidak berubah karena ditentukan pemberat.</p>
+<h3>10.3 Kayu</h3>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">Kebutuhan kayu</th><th style="text-align:right">Estimasi</th></tr></thead><tbody><tr><td style="text-align:left">8 post pilar 2,0 m</td><td style="text-align:right">16,0 m</td></tr><tr><td style="text-align:left">4 rail balok 3,6 m</td><td style="text-align:right">14,4 m</td></tr><tr><td style="text-align:left"><strong>Subtotal rangka utama</strong></td><td style="text-align:right"><strong>30,4 m</strong></td></tr><tr><td style="text-align:left">Rusuk/bracing/arch spine/runner/banner rail/saddle block</td><td style="text-align:right">≈ 20–24 m</td></tr><tr><td style="text-align:left"><strong>Total</strong></td><td style="text-align:right"><strong>50–54 m (13–14 balok 4 m)</strong></td></tr></tbody></table></div>
+<p>8 balok existing = 32 m; perlu <strong>5–6 balok tambahan</strong> atau kayu reklaim untuk runner, arch spine, bracing, dan saddle block. Prioritaskan pembelian untuk bagian struktural (runner, arch spine); bagian tersembunyi boleh reklaim.</p>
+<hr>
+<h2>11. Checklist verifikasi sebelum fabrikasi</h2>
+<ul><li class="chk-item"><label><input type="checkbox"> <span>Ukur puncak tenda; konfirmasi 3.200 mm atau perbarui geometri.</span></label></li><li class="chk-item"><label><input type="checkbox"> <span>Ukur lebar lokasi; pastikan G ≥ 0.700 m ke tetangga (versi 3,6 m) atau G ≥ 0.550 m (varian 3,3 m).</span></label></li><li class="chk-item"><label><input type="checkbox"> <span>Pastikan paving rata (kemiringan ≤ 2%) dan kering.</span></label></li><li class="chk-item"><label><input type="checkbox"> <span>Konfirmasi section kayu aktual (45×70 atau lain); perbarui perhitungan jika berbeda.</span></label></li><li class="chk-item"><label><input type="checkbox"> <span>Konfirmasi plywood 9 mm vs 12 mm; perbarui berat.</span></label></li><li class="chk-item"><label><input type="checkbox"> <span>Siapkan 24 kantong pasir 25 kg (600 kg) dan 2 box.</span></label></li><li class="chk-item"><label><input type="checkbox"> <span>Siapkan 4 orang untuk angkat/turun.</span></label></li><li class="chk-item"><label><input type="checkbox"> <span>Buat uji coba rakitan di halaman sebelum hari-H.</span></label></li><li class="chk-item"><label><input type="checkbox"> <span>Isi checklist inspeksi Tahap 5.</span></label></li></ul>
+<hr>
+<h2>12. Kesimpulan</h2>
+<ol><li>Gapura <strong>tidak stabil tanpa pemberat</strong>; 600 kg adalah minimum desain untuk v = 20 m/s.</li><li>Dengan 600 kg, FOS guling 2,00 (belakang) dan 1,60 (depan); geser 1,86 (kering); bearing 8,3 kPa rata-rata.</li><li>Batas operasi: <strong>20 m/s</strong>; di atas itu lepas banner dan tambah pemberat atau bongkar.</li><li>Balok dan pilar sangat kuat untuk lentur/tekan; <strong>sambungan dan ballast</strong> yang menentukan.</li><li>Material: 3 lembar plywood (rekomendasi) atau 2 lembar + kain (hemat); 8 balok + 5–6 balok tambahan/reklaim.</li><li>Semua angka adalah pendahuluan; verifikasi oleh insinyur dan uji coba lapangan wajib sebelum digunakan publik.</li></ol>
+    </article>
+  </section>
+
+  <!-- TAB 4: RAKIT -->
+  <section id="tab-rakit" class="panel">
+    <div class="section-bar">
+      <h2 class="section-title">Urutan Rakit 8 Langkah &amp; Cutting List (Tahap 4)</h2>
+      <div class="btn-row">
+        <a class="btn" href="docs/04-rakit/urutan-rakit.html" target="_blank" rel="noopener">Buka Diagram ↗</a>
+        <a class="btn" href="docs/04-rakit/urutan-rakit.md" target="_blank" rel="noopener">File .md ↗</a>
+      </div>
+    </div>
+    <article class="card">
+      <div class="card-head">
+        <div>
+          <h3 class="card-title">Diagram Urutan Rakit 8 Langkah</h3>
+          <p class="card-desc">Tahap pemasangan dari setting out &amp; runner hingga pengisian 24 kantong pasir (600 kg) dan serah terima.</p>
+        </div>
+        <span class="badge">8 Langkah</span>
+      </div>
+      <div class="card-media" data-zoom="docs/04-rakit/urutan-rakit.png" data-title="Urutan Rakit 8 Langkah" data-link="docs/04-rakit/urutan-rakit.html">
+        <img src="docs/04-rakit/urutan-rakit.png" alt="Diagram Urutan Rakit" loading="lazy">
+      </div>
+      <div class="card-foot">
+        <div class="link-group">
+          <a href="docs/04-rakit/urutan-rakit.html" target="_blank" rel="noopener">Buka HTML ↗</a>
+          <a href="docs/04-rakit/urutan-rakit.svg" target="_blank" rel="noopener">SVG ↗</a>
+          <a href="docs/04-rakit/urutan-rakit.png" target="_blank" rel="noopener">PNG ↗</a>
+        </div>
+        <button class="btn" type="button" data-zoom="docs/04-rakit/urutan-rakit.png" data-title="Urutan Rakit 8 Langkah" data-link="docs/04-rakit/urutan-rakit.html">Perbesar</button>
+      </div>
+    </article>
+    <article class="doc-box">
+      <h1>Tahap 4 — Urutan Rakit, Cutting List, dan Persiapan Lokasi</h1>
+<p><strong>Proyek:</strong> Gapura Papua STMKG, freestanding di depan tenda 3×3 m <strong>Status:</strong> panduan fabrikasi dan rakit, <strong>bukan gambar kerja tersertifikasi</strong> <strong>Revisi:</strong> 1 — 27 November 2026 <strong>Dasar:</strong> Tahap 2C (geometri) + Tahap 3 (struktur, rev 3) + KEPUTUSAN-3A…3G <strong>Gambar pendamping:</strong> <code>urutan-rakit.png</code> (8 langkah), <code>../03-struktur/detail-1.png</code>, <code>../03-struktur/detail-2.png</code></p>
+<hr>
+<h2>1. Prasyarat dan batas</h2>
+<p>Pekerjaan ini boleh dimulai hanya jika:</p>
+<ol><li>Paving rata (kemiringan ≤ 2%), kering, tidak berlubang, dan mampu menahan beban ≥ 100 kPa <code>[ASUMSI]</code>.</li><li>Jarak ke tetangga G ≥ 0.700 m untuk versi balok 3.600 mm; G ≥ 0.550 m untuk varian 3.300 mm <code>[KONFIRMASI]</code>.</li><li>Puncak tenda sudah diukur; angka 3.200 mm masih <code>[ASUMSI]</code> sampai diukur.</li><li>Material, alat, dan 24 kantong pasir 25 kg (600 kg) tersedia.</li><li>Minimal 4 orang untuk angkat balok; 2 orang untuk pekerjaan di atas tangga.</li><li>Tidak ada penambatan, tiang pancang, atau lubang pada paving/tenda. Tenda <strong>tidak boleh</strong> dibebani atau diikat.</li></ol>
+<p>Dokumen ini tidak menggantikan pemeriksaan insinyur berwenang. Semua sambungan dan pemberat harus dicek di lokasi sebelum dipakai publik.</p>
+<hr>
+<h2>2. Data yang dipakai</h2>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">Item</th><th style="text-align:left">Nilai</th><th style="text-align:left">Label</th></tr></thead><tbody><tr><td style="text-align:left">Lebar total gapura (ujung ekor)</td><td style="text-align:left">4.400 mm</td><td style="text-align:left"><code>[KEPUTUSAN]</code></td></tr><tr><td style="text-align:left">Tinggi total</td><td style="text-align:left">3.400 mm</td><td style="text-align:left"><code>[KEPUTUSAN]</code></td></tr><tr><td style="text-align:left">Soffit balok</td><td style="text-align:left">z = 2.000 mm</td><td style="text-align:left"><code>[KEPUTUSAN-K2]</code></td></tr><tr><td style="text-align:left">Balok</td><td style="text-align:left">3.600 × 500 × 500 mm</td><td style="text-align:left"><code>[KEPUTUSAN-K2]</code></td></tr><tr><td style="text-align:left">Pilar</td><td style="text-align:left">500×500 → 400×400 mm, h = 2.000 mm</td><td style="text-align:left"><code>[KEPUTUSAN-K1/K2]</code></td></tr><tr><td style="text-align:left">Bukaan bawah / atas</td><td style="text-align:left">2.000 / 2.200 mm</td><td style="text-align:left"><code>[KEPUTUSAN-K2]</code></td></tr><tr><td style="text-align:left">Runner</td><td style="text-align:left">1.600 × 100 × 100 mm, y = 0.150–1.750</td><td style="text-align:left"><code>[KOREKSI-2B]</code></td></tr><tr><td style="text-align:left">Box pemberat</td><td style="text-align:left">500 × 1.050 × 400 mm, 2 × 300 kg</td><td style="text-align:left"><code>[KEPUTUSAN-3B]</code></td></tr><tr><td style="text-align:left">Banner</td><td style="text-align:left">600 × 1.500 mm, x = ±1.500…±2.100</td><td style="text-align:left"><code>[KEPUTUSAN-3A]</code></td></tr><tr><td style="text-align:left">Rel banner</td><td style="text-align:left">600 × 80 × 60 mm</td><td style="text-align:left"><code>[KEPUTUSAN-2C/3A]</code></td></tr><tr><td style="text-align:left">Jarak ke tenda</td><td style="text-align:left">150 mm (y = 0.150)</td><td style="text-align:left"><code>[KONFIRMASI]</code></td></tr><tr><td style="text-align:left">Batas angin operasi</td><td style="text-align:left">20 m/s</td><td style="text-align:left"><code>[ASUMSI]</code></td></tr><tr><td style="text-align:left">Pemberat minimum</td><td style="text-align:left">600 kg total</td><td style="text-align:left"><code>[KEPUTUSAN-3B]</code></td></tr></tbody></table></div>
+<hr>
+<h2>3. Cutting list kayu 45×70 mm</h2>
+<p>Section kayu aktual harus dicek; tabel memakai 45×70 mm <code>[ASUMSI]</code>. Jika section berbeda, perbarui panjang dan perhitungan.</p>
+<div class="table-wrap"><table><thead><tr><th style="text-align:right">No</th><th style="text-align:left">Komponen</th><th style="text-align:right">Potongan (mm)</th><th style="text-align:right">Qty</th><th style="text-align:right">Total (m)</th><th style="text-align:left">Catatan</th></tr></thead><tbody><tr><td style="text-align:right">1</td><td style="text-align:left">Post pilar</td><td style="text-align:right">2.000</td><td style="text-align:right">8</td><td style="text-align:right">16.0</td><td style="text-align:left">4 post per pilar</td></tr><tr><td style="text-align:right">2</td><td style="text-align:left">Rail bawah pilar</td><td style="text-align:right">500</td><td style="text-align:right">8</td><td style="text-align:right">4.0</td><td style="text-align:left">2 pilar × 4 sisi</td></tr><tr><td style="text-align:right">3</td><td style="text-align:left">Rail atas pilar</td><td style="text-align:right">400</td><td style="text-align:right">8</td><td style="text-align:right">3.2</td><td style="text-align:left">2 pilar × 4 sisi</td></tr><tr><td style="text-align:right">4</td><td style="text-align:left">Rail tengah/bracing pilar</td><td style="text-align:right">800</td><td style="text-align:right">4</td><td style="text-align:right">3.2</td><td style="text-align:left">2 per pilar</td></tr><tr><td style="text-align:right">5</td><td style="text-align:left">Rail balok memanjang</td><td style="text-align:right">3.600</td><td style="text-align:right">4</td><td style="text-align:right">14.4</td><td style="text-align:left">4 sisi balok</td></tr><tr><td style="text-align:right">6</td><td style="text-align:left">Vertikal/blocking balok</td><td style="text-align:right">500</td><td style="text-align:right">4</td><td style="text-align:right">2.0</td><td style="text-align:left">@ ±1.200 dan ±1.750</td></tr><tr><td style="text-align:right">7</td><td style="text-align:left">Spine lengkung</td><td style="text-align:right">3.700</td><td style="text-align:right">2</td><td style="text-align:right">7.4</td><td style="text-align:left">kerf/laminasi; panjang developed</td></tr><tr><td style="text-align:right">8</td><td style="text-align:left">Rusuk lengkung</td><td style="text-align:right">300</td><td style="text-align:right">4</td><td style="text-align:right">1.2</td><td style="text-align:left">penopang band</td></tr><tr><td style="text-align:right">9</td><td style="text-align:left">Gusset/cleat</td><td style="text-align:right">200</td><td style="text-align:right">10</td><td style="text-align:right">2.0</td><td style="text-align:left">dari offcut</td></tr><tr><td style="text-align:right"><strong>Total</strong></td><td style="text-align:left"></td><td style="text-align:right"></td><td style="text-align:right"></td><td style="text-align:right"><strong>53.4 m</strong></td><td style="text-align:left">≈ 13–14 balok 4 m</td></tr></tbody></table></div>
+<p><strong>Cek material:</strong></p>
+<pre><code>8 balok existing × 4.0 m = 32.0 m
+Kebutuhan tambahan = 53.4 − 32.0 = 21.4 m
+Jumlah balok 4 m tambahan = 21.4 / 4 = 5.35 → 6 balok (atau reklaim)</code></pre>
+<p>Sisa potongan disimpan untuk shim, cleat, dan perbaikan.</p>
+<h3>3.1 Kayu 100×100 mm (runner, saddle, tiang burung)</h3>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">Komponen</th><th style="text-align:right">Potongan (mm)</th><th style="text-align:right">Qty</th><th style="text-align:right">Total (m)</th><th style="text-align:left">Catatan</th></tr></thead><tbody><tr><td style="text-align:left">Runner</td><td style="text-align:right">1.600</td><td style="text-align:right">2</td><td style="text-align:right">3.2</td><td style="text-align:left">bisa 100×100 solid atau laminasi</td></tr><tr><td style="text-align:left">Saddle block</td><td style="text-align:right">300</td><td style="text-align:right">4</td><td style="text-align:right">1.2</td><td style="text-align:left">2 per pilar</td></tr><tr><td style="text-align:left">Tiang burung</td><td style="text-align:right">500</td><td style="text-align:right">2</td><td style="text-align:right">1.0</td><td style="text-align:left">x = ±1.750</td></tr><tr><td style="text-align:left">Blocking dalam balok</td><td style="text-align:right">100</td><td style="text-align:right">2</td><td style="text-align:right">0.2</td><td style="text-align:left">di x = ±1.750</td></tr><tr><td style="text-align:left"><strong>Total</strong></td><td style="text-align:right"></td><td style="text-align:right"></td><td style="text-align:right"><strong>5.6 m</strong></td><td style="text-align:left">stok/reklaim terpisah</td></tr></tbody></table></div>
+<p>Jika 100×100 tidak tersedia, laminasi 2 × 45×70 dengan lem PU + sekrup; kebutuhan kayu 45×70 menjadi 11.2 m tambahan. Jangan memakai potongan yang berlubang besar atau retak.</p>
+<h3>3.2 Kayu 80×60 mm (rel banner)</h3>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">Komponen</th><th style="text-align:right">Potongan (mm)</th><th style="text-align:right">Qty</th><th style="text-align:right">Total (m)</th></tr></thead><tbody><tr><td style="text-align:left">Rel banner</td><td style="text-align:right">600</td><td style="text-align:right">2</td><td style="text-align:right">1.2</td></tr></tbody></table></div>
+<p>Bisa juga di-rip dari kayu 45×70 yang dilaminasi menjadi 80×60; label <code>[ASUMSI]</code> jika section berbeda.</p>
+<hr>
+<h2>4. Cutting list plywood 9 mm</h2>
+<div class="table-wrap"><table><thead><tr><th style="text-align:right">No</th><th style="text-align:left">Komponen</th><th style="text-align:right">Ukuran (mm)</th><th style="text-align:right">Luas (m²)</th><th style="text-align:left">Catatan</th></tr></thead><tbody><tr><td style="text-align:right">1</td><td style="text-align:left">Kulit depan balok</td><td style="text-align:right">3.600 × 500</td><td style="text-align:right">1.80</td><td style="text-align:left">1 lembar utuh</td></tr><tr><td style="text-align:right">2</td><td style="text-align:left">Kulit soffit balok</td><td style="text-align:right">3.600 × 500</td><td style="text-align:right">1.80</td><td style="text-align:left">sambung bila perlu</td></tr><tr><td style="text-align:right">3</td><td style="text-align:left">Kulit depan pilar</td><td style="text-align:right">2.000 × 500</td><td style="text-align:right">2.00</td><td style="text-align:left">2 pilar</td></tr><tr><td style="text-align:right">4</td><td style="text-align:left">Burung</td><td style="text-align:right">800 × 800</td><td style="text-align:right">1.28</td><td style="text-align:left">2 pcs</td></tr><tr><td style="text-align:right">5</td><td style="text-align:left">Lengkung, gusset, cadangan</td><td style="text-align:right">—</td><td style="text-align:right">0.60</td><td style="text-align:left">termasuk 8 gusset 200×200</td></tr><tr><td style="text-align:right"><strong>Total</strong></td><td style="text-align:left"></td><td style="text-align:right"></td><td style="text-align:right"><strong>7.48 m²</strong></td><td style="text-align:left"></td></tr></tbody></table></div>
+<p><strong>Cek lembar:</strong></p>
+<pre><code>1 lembar 1.220 × 2.440 = 2.977 m²
+3 lembar = 8.931 m²
+Sisa = 8.931 − 7.48 = 1.45 m²</code></pre>
+<p><strong>Keputusan:</strong> 3 lembar (2 existing + 1 tambahan) <code>[KEPUTUSAN]</code>. Box pemberat memakai OSB/kayu reklaim, bukan jatah plywood ini. Jika hanya 2 lembar, pakai versi hemat (soffit kain, burung 600×600) seperti laporan struktur §10.2.</p>
+<hr>
+<h2>5. Hardware dan bahan habis pakai</h2>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">Item</th><th style="text-align:left">Spesifikasi</th><th style="text-align:right">Qty</th><th style="text-align:left">Catatan</th></tr></thead><tbody><tr><td style="text-align:left">Baut M10×160</td><td style="text-align:left">4.6, ring lebar Ø30, mur</td><td style="text-align:right">14</td><td style="text-align:left">8 balok–pilar + 4 pilar–runner + 2 cadangan</td></tr><tr><td style="text-align:left">Baut M8×160</td><td style="text-align:left">4.6, ring Ø25, mur</td><td style="text-align:right">14</td><td style="text-align:left">4 tiang burung + 4 tab burung + 4 box + 2 cadangan</td></tr><tr><td style="text-align:left">Sekrup kayu 4×40</td><td style="text-align:left">galvanis</td><td style="text-align:right">500</td><td style="text-align:left">skin, gusset, arch @150</td></tr><tr><td style="text-align:left">Sekrup kayu 5×80</td><td style="text-align:left">galvanis</td><td style="text-align:right">100</td><td style="text-align:left">rangka</td></tr><tr><td style="text-align:left">Sekrup kayu 8×100</td><td style="text-align:left">galvanis</td><td style="text-align:right">50</td><td style="text-align:left">saddle/blocking</td></tr><tr><td style="text-align:left">Lem PU</td><td style="text-align:left">exterior</td><td style="text-align:right">2 kg</td><td style="text-align:left">semua sambungan kayu</td></tr><tr><td style="text-align:left">Sealant</td><td style="text-align:left">exterior</td><td style="text-align:right">2 tube</td><td style="text-align:left">celah skin</td></tr><tr><td style="text-align:left">Eye screw</td><td style="text-align:left">Ø6, 50 mm</td><td style="text-align:right">4</td><td style="text-align:left">soffit balok</td></tr><tr><td style="text-align:left">Hook</td><td style="text-align:left">Ø6</td><td style="text-align:right">4</td><td style="text-align:left">rel banner</td></tr><tr><td style="text-align:left">Rod galvanis</td><td style="text-align:left">Ø6 × 500</td><td style="text-align:right">4</td><td style="text-align:left">hanger</td></tr><tr><td style="text-align:left">Safety wire</td><td style="text-align:left">Ø1.5</td><td style="text-align:right">4 m</td><td style="text-align:left">banner</td></tr><tr><td style="text-align:left">Strap ratchet</td><td style="text-align:left">25 mm</td><td style="text-align:right">4</td><td style="text-align:left">2 per box</td></tr><tr><td style="text-align:left">Kantong pasir</td><td style="text-align:left">25 kg</td><td style="text-align:right">24</td><td style="text-align:left">600 kg total</td></tr><tr><td style="text-align:left">Karet pad</td><td style="text-align:left">6 mm</td><td style="text-align:right">4 × (100×1.050) + 2 × (500×500)</td><td style="text-align:left">bawah kaki box &amp; pilar</td></tr><tr><td style="text-align:left">Plywood pad</td><td style="text-align:left">12 mm</td><td style="text-align:right">2 × (550×1.100)</td><td style="text-align:left">sebar beban di paving</td></tr><tr><td style="text-align:left">Warning strip</td><td style="text-align:left">3.400 × 80</td><td style="text-align:right">1</td><td style="text-align:left">reflektor/plywood dicat</td></tr><tr><td style="text-align:left">Banner</td><td style="text-align:left">600 × 1.500</td><td style="text-align:right">2</td><td style="text-align:left">flexi/kain</td></tr><tr><td style="text-align:left">Cat kayu</td><td style="text-align:left">sealer + exterior</td><td style="text-align:right">5 L + 5 L</td><td style="text-align:left">2 lapis</td></tr><tr><td style="text-align:left">Amplas, kuas, kain</td><td style="text-align:left">—</td><td style="text-align:right">secukupnya</td><td style="text-align:left"></td></tr></tbody></table></div>
+<p><strong>Catatan banner:</strong> jika banner 1.500 mm menyentuh paving, lipat hem bawah 50 mm atau gunakan tinggi cetak 1.450 mm. Area angin berubah &lt; 4%; stabilitas tetap ditentukan pemberat. <code>[KEPUTUSAN-4A]</code></p>
+<hr>
+<h2>6. Alat</h2>
+<ul><li>Circular saw + guide rail, jigsaw, bor 8/10 mm, impact driver.</li><li>Kunci socket 10/13/17, kunci pas, tang, cutter.</li><li>Waterpass 1.2 m, unting, tali, meteran 5 m, siku, pensil.</li><li>4 sawhorse, 6 clamp, 2 tangga aluminium, terpal.</li><li>APD: helm, sarung tangan, kacamata, sepatu, rompi.</li><li>Barikade/cone dan papan &quot;pekerjaan&quot;.</li></ul>
+<hr>
+<h2>7. Tenaga dan waktu</h2>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">Tahap</th><th style="text-align:right">Orang</th><th style="text-align:right">Waktu</th></tr></thead><tbody><tr><td style="text-align:left">Fabrikasi rangka + skin</td><td style="text-align:right">2–3</td><td style="text-align:right">3–4 hari</td></tr><tr><td style="text-align:left">Pra-rakit di halaman</td><td style="text-align:right">3–4</td><td style="text-align:right">1 hari</td></tr><tr><td style="text-align:left">Rakit di lokasi</td><td style="text-align:right">4</td><td style="text-align:right">3–4 jam</td></tr><tr><td style="text-align:left">Bongkar</td><td style="text-align:right">3–4</td><td style="text-align:right">2 jam</td></tr></tbody></table></div>
+<p>Waktu tidak termasuk pengeringan cat (24 jam) dan pengeringan lem (12 jam).</p>
+<hr>
+<h2>8. Setting out di lokasi</h2>
+<ol><li>Bersihkan paving; tandai tepi tenda sebagai garis y = 0.</li><li>Tarik garis sejajar tenda pada y = 0.150 (muka depan gapura). Jangan membuat lubang.</li><li>Tandai centerline runner kiri dan kanan pada x = −1.250 dan +1.250.</li><li>Tandai ujung runner y = 0.150 dan y = 1.750.</li><li>Cek persegi dengan diagonal.</li></ol>
+<p><strong>Rumus diagonal runner:</strong></p>
+<pre><code>d = √(2.500² + 1.600²)
+  = √(6.250.000 + 2.560.000)
+  = √8.810.000
+  = 2.968 mm</code></pre>
+<p>Toleransi diagonal ±10 mm. Jika lebih, geser runner sebelum dipasang.</p>
+<p><strong>Cek bukaan pilar:</strong></p>
+<pre><code>Diagonal bukaan (bawah 2.000, atas 2.200, tinggi 2.000):
+d = √(2.100² + 2.000²) = √(4.410.000 + 4.000.000) = 2.900 mm</code></pre>
+<p>Kedua diagonal harus sama (±10 mm). Ini memastikan pilar tidak miring ke samping.</p>
+<hr>
+<h2>9. Pra-rakit di halaman</h2>
+<p>Lakukan sebelum hari-H, di permukaan rata:</p>
+<ol><li>Potong semua kayu sesuai cutting list; beri label L/R dan nomor komponen.</li><li>Buat 2 rangka pilar 500×500 → 400×400; cek diagonal alas 707 mm dan atas 566 mm.</li><li>Buat rangka balok 3.600×500; cek diagonal 3.635 mm; pasang 4 rail memanjang.</li><li>Buat lengkung di template: band 250 mm, naik 500 mm; cek tali.</li><li>Potong burung 800×800; haluskan tepi; cat.</li><li>Buat 2 box pemberat; coba masukkan 12 kantong; timbang.</li><li>Coba pasang balok di atas 2 pilar; bor lubang M10; pasang gusset; bongkar lagi.</li><li>Cat semua permukaan; keringkan 24 jam. Beri tanda &quot;DEPAN&quot; pada balok.</li></ol>
+<p><strong>Cek rangka pilar:</strong></p>
+<pre><code>Diagonal alas 500×500 = √(500² + 500²) = 707 mm
+Diagonal atas 400×400 = √(400² + 400²) = 566 mm</code></pre>
+<p><strong>Cek rangka balok:</strong></p>
+<pre><code>Diagonal = √(3.600² + 500²) = √(12.960.000 + 250.000) = 3.635 mm</code></pre>
+<hr>
+<h2>10. Urutan rakit di lokasi (8 langkah)</h2>
+<h3>Langkah 1 — Set out dan runner</h3>
+<ol><li>Pasang plywood pad 12 mm + karet 6 mm di jalur runner.</li><li>Letakkan 2 runner 100×100 pada x = ±1.250, y = 0.150–1.750.</li><li>Letakkan box pemberat kosong di atas runner; jangan isi dulu.</li><li>Cek level runner (≤3 mm/m) dan diagonal 2.968 mm.</li></ol>
+<p><strong>Jangan</strong> mengisi pasir sebelum pilar dan balok terpasang; box berat sulit digeser.</p>
+<h3>Langkah 2 — Pilar kiri</h3>
+<ol><li>Angkat rangka pilar kiri (2 orang) dan masukkan runner ke notch 100×100.</li><li>Pasang 2 saddle 100×100×300 di kiri-kanan runner; lem + sekrup.</li><li>Bor 2×M10 tembus saddle–runner–saddle di y = 0.25 dan 0.55; ring Ø30.</li><li>Pasang 2 gusset 200×200×9 di luar pilar; lem + sekrup @75 mm.</li><li>Cek plumb dengan unting; deviasi ≤5 mm per 2 m. Pasang brace sementara ke box/runner (bukan ke paving).</li></ol>
+<h3>Langkah 3 — Pilar kanan</h3>
+<ol><li>Ulangi langkah 2 untuk pilar kanan.</li><li>Cek jarak luar atas 3.000 mm (2 × 1.500), jarak dalam atas 2.200 mm, jarak dalam bawah 2.000 mm.</li><li>Cek kedua diagonal bukaan 2.900 mm; selisih ≤10 mm.</li><li>Pasang brace sementara antar pilar di z ≈ 1.0 m; jangan skrup permanen.</li></ol>
+<h3>Langkah 4 — Balok</h3>
+<ol><li>Angkat balok 3.600×500×500 dengan 4 orang; jangan angkat satu sisi.</li><li>Letakkan di atas pilar; soffit z = 2.000; cek overhang 300 mm dari muka luar pilar.</li><li>Bor 4×M10×160 per sisi; ring Ø30; kencangkan silang.</li><li>Pasang gusset 200×200×9 di dua sisi; lem + sekrup.</li><li>Cek level balok (≤3 mm/3.6 m); lepas brace sementara setelah baut kencang.</li></ol>
+<p><strong>Alternatif aman:</strong> pasang lengkung dan tiang burung ke balok di tanah, lalu angkat satu unit. Berat tambahan ≈ 8–10 kg; masih dapat diangkat 4 orang. Kurangi pekerjaan di tangga.</p>
+<h3>Langkah 5 — Lengkung dan tiang burung</h3>
+<ol><li>Pasang band lengkung 250 mm di atas balok; lem PU + sekrup 4×40 @150 mm.</li><li>Pasang 2 tiang burung 100×100×500 di x = ±1.750, y = 0.400; base plate 150×150×9 + 2×M8×160.</li><li>Cek simetri lengkung dengan tali; deviasi maks 5 mm.</li><li>Cek tiang burung vertikal; jangan menambah beban di tengah lengkung.</li></ol>
+<h3>Langkah 6 — Burung</h3>
+<ol><li>Pasang burung 800×800×9 di ujung lengkung/tiang burung.</li><li>Tab 100×100×12 masuk celah badan burung; 2×M8 per burung; ring Ø25.</li><li>Cek kiri-kanan simetris dan tidak menyentuh tenda (celah ≥150 mm).</li><li>Kencangkan secukupnya; jangan sampai plywood retak.</li></ol>
+<h3>Langkah 7 — Banner dan rel</h3>
+<ol><li>Pasang rel 600×80×60 di z = 1.480–1.540; dua hanger Ø6 per banner.</li><li>Masukkan banner 600×1500 ke sleeve rel; 3 sekrup kecil tiap ujung.</li><li>Pasang safety wire 1.5 mm dari eye screw ke hook.</li><li>Cek celah 20 mm ke box pemberat; banner tidak menempel tenda.</li><li>Jika banner menyentuh paving, lipat hem 50 mm.</li></ol>
+<h3>Langkah 8 — Pemberat dan serah terima</h3>
+<ol><li>Isi 12 kantong ×25 kg per box; padatkan; jangan ada kantong menggantung.</li><li>Tutup lid; pasang 2 strap 25 mm + 2×M8 box–runner.</li><li>Cek total 600 kg (timbang atau hitung kantong).</li><li>Cek semua baut, ring, gusset, plumb, dan level.</li><li>Isi checklist, foto, dan serah terima. <strong>Jangan dipakai tanpa 600 kg.</strong></li></ol>
+<p><strong>Cek pemberat:</strong></p>
+<pre><code>12 kantong × 25 kg = 300 kg per box
+2 box × 300 kg = 600 kg total</code></pre>
+<p><strong>Cek stabilitas (dari laporan struktur):</strong></p>
+<pre><code>FOS_A = 2.00 (angin dari depan)
+FOS_B = 1.60 (angin dari belakang)
+Batas operasi v = 20 m/s</code></pre>
+<p>Jika angin &gt;20 m/s: lepas banner, tambah 4 kantong per sisi, atau bongkar.</p>
+<hr>
+<h2>11. Checklist pemeriksaan per langkah</h2>
+<div class="table-wrap"><table><thead><tr><th style="text-align:right">Langkah</th><th style="text-align:left">Yang dicek</th><th style="text-align:left">Kriteria</th><th style="text-align:left">Paraf</th></tr></thead><tbody><tr><td style="text-align:right">1</td><td style="text-align:left">Level runner</td><td style="text-align:left">≤3 mm/m</td><td style="text-align:left"></td></tr><tr><td style="text-align:right">1</td><td style="text-align:left">Jarak runner</td><td style="text-align:left">2.500 ±5 mm</td><td style="text-align:left"></td></tr><tr><td style="text-align:right">1</td><td style="text-align:left">Diagonal runner</td><td style="text-align:left">2.968 ±10 mm</td><td style="text-align:left"></td></tr><tr><td style="text-align:right">2</td><td style="text-align:left">Plumb pilar kiri</td><td style="text-align:left">≤5 mm/2 m</td><td style="text-align:left"></td></tr><tr><td style="text-align:right">2</td><td style="text-align:left">Baut pilar–runner</td><td style="text-align:left">2×M10 kencang, ring lengkap</td><td style="text-align:left"></td></tr><tr><td style="text-align:right">3</td><td style="text-align:left">Jarak dalam atas</td><td style="text-align:left">2.200 ±5 mm</td><td style="text-align:left"></td></tr><tr><td style="text-align:right">3</td><td style="text-align:left">Jarak dalam bawah</td><td style="text-align:left">2.000 ±5 mm</td><td style="text-align:left"></td></tr><tr><td style="text-align:right">3</td><td style="text-align:left">Diagonal bukaan</td><td style="text-align:left">2.900 ±10 mm, selisih ≤10 mm</td><td style="text-align:left"></td></tr><tr><td style="text-align:right">4</td><td style="text-align:left">Level balok</td><td style="text-align:left">≤3 mm/3.6 m</td><td style="text-align:left"></td></tr><tr><td style="text-align:right">4</td><td style="text-align:left">Baut balok–pilar</td><td style="text-align:left">8×M10 kencang</td><td style="text-align:left"></td></tr><tr><td style="text-align:right">4</td><td style="text-align:left">Gusset</td><td style="text-align:left">2 sisi, lem + sekrup</td><td style="text-align:left"></td></tr><tr><td style="text-align:right">5</td><td style="text-align:left">Rise lengkung</td><td style="text-align:left">500 ±10 mm</td><td style="text-align:left"></td></tr><tr><td style="text-align:right">5</td><td style="text-align:left">Plumb tiang burung</td><td style="text-align:left">≤5 mm</td><td style="text-align:left"></td></tr><tr><td style="text-align:right">6</td><td style="text-align:left">Simetri burung</td><td style="text-align:left">selisih ≤10 mm</td><td style="text-align:left"></td></tr><tr><td style="text-align:right">6</td><td style="text-align:left">Celah ke tenda</td><td style="text-align:left">≥150 mm</td><td style="text-align:left"></td></tr><tr><td style="text-align:right">7</td><td style="text-align:left">Celah banner–box</td><td style="text-align:left">20 ±5 mm</td><td style="text-align:left"></td></tr><tr><td style="text-align:right">7</td><td style="text-align:left">Safety wire</td><td style="text-align:left">terpasang, tidak kendor</td><td style="text-align:left"></td></tr><tr><td style="text-align:right">8</td><td style="text-align:left">Total pemberat</td><td style="text-align:left">600 kg</td><td style="text-align:left"></td></tr><tr><td style="text-align:right">8</td><td style="text-align:left">Semua baut/strap</td><td style="text-align:left">kencang, tidak ada yang hilang</td><td style="text-align:left"></td></tr><tr><td style="text-align:right">8</td><td style="text-align:left">Dokumen</td><td style="text-align:left">checklist + foto + tanda tangan</td><td style="text-align:left"></td></tr></tbody></table></div>
+<hr>
+<h2>12. Bongkar dan penyimpanan</h2>
+<ol><li>Lepas banner dan burung lebih dulu (ringan).</li><li>Lepas safety wire, hook, dan rel.</li><li>Lepas baut balok–pilar; turunkan balok dengan 4 orang.</li><li>Lepas baut pilar–runner; turunkan pilar.</li><li>Kosongkan box; lipat/lepas kaki bila perlu.</li><li>Simpan kayu di tempat kering, tidak menumpuk di tanah; beri ganjal.</li><li>Periksa kerusakan; cat ulang bagian yang lecet sebelum dipakai lagi.</li></ol>
+<hr>
+<h2>13. Risiko dan pengendalian</h2>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">Risiko</th><th style="text-align:left">Pengendalian</th></tr></thead><tbody><tr><td style="text-align:left">Angin &gt;20 m/s</td><td style="text-align:left">Pantau cuaca; lepas banner/tambah pemberat/bongkar</td></tr><tr><td style="text-align:left">Paving basah/licin</td><td style="text-align:left">Hentikan operasi; keringkan; pasang karet</td></tr><tr><td style="text-align:left">Lifting manual</td><td style="text-align:left">4 orang; tekuk lutut; jangan angkat satu sisi</td></tr><tr><td style="text-align:left">Kerja di tangga</td><td style="text-align:left">2 orang; tangga stabil; jangan menjangkau jauh</td></tr><tr><td style="text-align:left">Baut/ring jatuh</td><td style="text-align:left">Tool lanyard; helm; area steril</td></tr><tr><td style="text-align:left">Pengunjung</td><td style="text-align:left">Barikade; satu pintu masuk; awasi anak-anak</td></tr><tr><td style="text-align:left">Plywood retak</td><td style="text-align:left">Pilot hole; ring lebar; jangan over-torque</td></tr><tr><td style="text-align:left">Banner lepas</td><td style="text-align:left">Safety wire; sekrup ujung; cek setelah hujan</td></tr></tbody></table></div>
+<hr>
+<h2>14. Batas dan catatan akhir</h2>
+<ol><li>Semua dimensi dalam mm kecuali dinyatakan lain.</li><li>Section kayu 45×70 mm dan plywood 9 mm adalah <code>[ASUMSI]</code>; ukur material aktual sebelum potong.</li><li>Puncak tenda 3.200 mm adalah <code>[ASUMSI]</code>; ukur sebelum fabrikasi.</li><li>Paving 100 kPa adalah <code>[ASUMSI]</code>; jika paving tipis/berlubang, tambah alas plywood 12 mm.</li><li>Gapura tidak boleh berdiri tanpa 600 kg pemberat.</li><li>Batas operasi 20 m/s; di atas itu lepas banner dan tambah pemberat atau bongkar.</li><li>Dokumen ini pendahuluan; verifikasi insinyur dan uji coba lapangan wajib sebelum digunakan publik.</li></ol>
+    </article>
+  </section>
+
+  <!-- TAB 5: BERKAS -->
+  <section id="tab-berkas" class="panel">
+    <div class="section-bar">
+      <h2 class="section-title">Peta Lengkap Berkas Proyek</h2>
+    </div>
+    <div class="doc-box" style="margin-top:0">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Kategori</th><th>Nama Dokumen / Visualisasi</th><th>Tipe</th><th>Jalur Akses</th></tr></thead>
+          <tbody>
+            <tr><td>05 · Interaktif (Anatomy)</td><td><strong>Simulasi Stabilitas &amp; Rakit (Terang)</strong></td><td><code>HTML</code></td><td><a href="docs/05-interaktif/stand-light.html" target="_blank" rel="noopener"><code>docs/05-interaktif/stand-light.html</code> ↗</a></td></tr><tr><td>05 · Interaktif (Anatomy)</td><td><strong>Simulasi Stabilitas &amp; Rakit (Gelap)</strong></td><td><code>HTML</code></td><td><a href="docs/05-interaktif/stand.html" target="_blank" rel="noopener"><code>docs/05-interaktif/stand.html</code> ↗</a></td></tr><tr><td>05 · Interaktif (Anatomy)</td><td><strong>Script Builder Anatomy</strong></td><td><code>MJS</code></td><td><a href="docs/05-interaktif/build-stand.mjs" target="_blank" rel="noopener"><code>docs/05-interaktif/build-stand.mjs</code> ↗</a></td></tr><tr><td>02 · Geometri</td><td><strong>Lembar Gabungan Tampak Atas + Isometrik</strong></td><td><code>HTML</code></td><td><a href="docs/02-geometri/top-iso.html" target="_blank" rel="noopener"><code>docs/02-geometri/top-iso.html</code> ↗</a></td></tr><tr><td>02 · Geometri</td><td><strong>Perspektif Isometrik</strong></td><td><code>HTML</code></td><td><a href="docs/02-geometri/iso.html" target="_blank" rel="noopener"><code>docs/02-geometri/iso.html</code> ↗</a></td></tr><tr><td>02 · Geometri</td><td><strong>Tampak Depan &amp; Samping</strong></td><td><code>HTML</code></td><td><a href="docs/02-geometri/front-side.html" target="_blank" rel="noopener"><code>docs/02-geometri/front-side.html</code> ↗</a></td></tr><tr><td>02 · Geometri</td><td><strong>Tampak Atas (Rencana)</strong></td><td><code>HTML</code></td><td><a href="docs/02-geometri/top.html" target="_blank" rel="noopener"><code>docs/02-geometri/top.html</code> ↗</a></td></tr><tr><td>02 · Geometri</td><td><strong>Tabel Koordinat Geometri</strong></td><td><code>CSV</code></td><td><a href="docs/02-geometri/coordinates.csv" target="_blank" rel="noopener"><code>docs/02-geometri/coordinates.csv</code> ↗</a></td></tr><tr><td>03 · Struktur</td><td><strong>Detail Sambungan 1 (Pilar, Balok, Tiang Burung)</strong></td><td><code>HTML</code></td><td><a href="docs/03-struktur/detail-1.html" target="_blank" rel="noopener"><code>docs/03-struktur/detail-1.html</code> ↗</a></td></tr><tr><td>03 · Struktur</td><td><strong>Detail Sambungan 2 (Banner, Pemberat, Lengkung)</strong></td><td><code>HTML</code></td><td><a href="docs/03-struktur/detail-2.html" target="_blank" rel="noopener"><code>docs/03-struktur/detail-2.html</code> ↗</a></td></tr><tr><td>03 · Struktur</td><td><strong>Laporan Perhitungan Struktur</strong></td><td><code>MD</code></td><td><a href="docs/03-struktur/laporan-struktur.md" target="_blank" rel="noopener"><code>docs/03-struktur/laporan-struktur.md</code> ↗</a></td></tr><tr><td>04 · Rakit</td><td><strong>Diagram Urutan Rakit 8 Langkah</strong></td><td><code>HTML</code></td><td><a href="docs/04-rakit/urutan-rakit.html" target="_blank" rel="noopener"><code>docs/04-rakit/urutan-rakit.html</code> ↗</a></td></tr><tr><td>04 · Rakit</td><td><strong>Panduan Rakit &amp; Cutting List</strong></td><td><code>MD</code></td><td><a href="docs/04-rakit/urutan-rakit.md" target="_blank" rel="noopener"><code>docs/04-rakit/urutan-rakit.md</code> ↗</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="zoom-modal" class="modal" role="dialog" aria-modal="true" aria-label="Pratinjau gambar">
+  <div class="modal-inner">
+    <div class="modal-bar">
+      <span id="modal-title"></span>
+      <div class="btn-row">
+        <a id="modal-open" class="btn" href="#" target="_blank" rel="noopener">Buka Halaman Asli ↗</a>
+        <button id="modal-close" class="btn" type="button">Tutup (Esc)</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <img id="modal-img" src="" alt="">
+    </div>
+  </div>
+</div>
+
+<script>
+const tabBtns = document.querySelectorAll(".tab-btn");
+const panels = document.querySelectorAll(".panel");
+function setTab(id) {
+  for (const b of tabBtns) b.setAttribute("aria-selected", String(b.dataset.tab === id));
+  for (const p of panels) p.classList.toggle("active", p.id === "tab-" + id);
+  if (history.replaceState) history.replaceState(null, "", "#" + id);
+}
+for (const b of tabBtns) b.addEventListener("click", () => setTab(b.dataset.tab));
+const hashTab = location.hash.replace("#", "");
+if (["interaktif", "geometri", "struktur", "rakit", "berkas"].includes(hashTab)) setTab(hashTab);
+
+const simFrame = document.getElementById("sim-iframe");
+const openSim = document.getElementById("btn-open-sim");
+const btnLight = document.getElementById("btn-theme-light");
+const btnDark = document.getElementById("btn-theme-dark");
+function setSimTheme(mode) {
+  const href = mode === "dark" ? "docs/05-interaktif/stand.html" : "docs/05-interaktif/stand-light.html";
+  simFrame.src = href;
+  openSim.href = href;
+  btnLight.classList.toggle("active", mode === "light");
+  btnDark.classList.toggle("active", mode === "dark");
+}
+btnLight.addEventListener("click", () => setSimTheme("light"));
+btnDark.addEventListener("click", () => setSimTheme("dark"));
+
+const coordFilter = document.getElementById("coord-filter");
+const coordRows = document.querySelectorAll("#coord-table tbody tr");
+coordFilter.addEventListener("input", () => {
+  const q = coordFilter.value.trim().toLowerCase();
+  for (const tr of coordRows) {
+    tr.style.display = !q || tr.textContent.toLowerCase().includes(q) ? "" : "none";
+  }
+});
+
+const modal = document.getElementById("zoom-modal");
+const modalImg = document.getElementById("modal-img");
+const modalTitle = document.getElementById("modal-title");
+const modalOpen = document.getElementById("modal-open");
+function closeModal() { modal.classList.remove("open"); }
+for (const el of document.querySelectorAll("[data-zoom]")) {
+  el.addEventListener("click", () => {
+    modalImg.src = el.dataset.zoom;
+    modalImg.alt = el.dataset.title || "";
+    modalTitle.textContent = el.dataset.title || "";
+    modalOpen.href = el.dataset.link || el.dataset.zoom;
+    modal.classList.add("open");
+  });
+}
+document.getElementById("modal-close").addEventListener("click", closeModal);
+modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
+</script>
+</body>
+</html>

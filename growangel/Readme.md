@@ -1,1 +1,0 @@
-jan di jual pea
